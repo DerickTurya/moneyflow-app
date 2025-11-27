@@ -41,9 +41,9 @@ window.performLogout = window.doLogout;
 
 // Data
 let currentUser = {
-    name: 'João',
-    fullName: 'João Silva',
-    email: 'joao@exemplo.com'
+    name: 'Paulo',
+    fullName: 'Paulo Santos',
+    email: 'paulo@exemplo.com'
 };
 
 // Restaurar usuário do localStorage se existir
@@ -556,14 +556,14 @@ async function login() {
     if (!email || !password) {
         console.log('🎬 Entrando no modo demo');
         
-        // SEMPRE usar João Silva em modo demo (não usar localStorage)
+        // SEMPRE usar Paulo Santos em modo demo (não usar localStorage)
         localStorage.removeItem('moneyflow_user'); // Limpa qualquer usuário antigo
         
         currentUser = {
             id: '25a4b86d-0918-4312-b773-6b5bfc14cd02',
-            name: 'João',
-            fullName: 'João Silva',
-            email: 'joao@exemplo.com'
+            name: 'Paulo',
+            fullName: 'Paulo Santos',
+            email: 'paulo@exemplo.com'
         };
         
         console.log('👤 Modo demo - Usuário:', currentUser.fullName, '| ID:', currentUser.id);
@@ -574,7 +574,7 @@ async function login() {
             window.MoneyFlowTracker.track('login', {
                 method: 'demo',
                 success: true,
-                email: 'joao@exemplo.com'
+                email: 'paulo@exemplo.com'
             });
         }
         
@@ -870,9 +870,9 @@ window.logout = function() {
     
     // Resetar para dados demo
     currentUser = {
-        name: 'João',
-        fullName: 'João Silva',
-        email: 'joao@exemplo.com'
+        name: 'Paulo',
+        fullName: 'Paulo Santos',
+        email: 'paulo@exemplo.com'
     };
     
     // Resetar transações demo
@@ -4227,7 +4227,7 @@ function createVirtualCard() {
             number: cardNumber,
             cvv: cvv,
             expiry: expiry,
-            holder: 'JOAO SILVA',
+            holder: 'PAULO SANTOS',
             createdAt: new Date().toISOString(),
             status: 'active'
         };
