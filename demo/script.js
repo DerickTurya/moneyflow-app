@@ -533,6 +533,14 @@ async function login() {
         return;
     }
     
+    // 🔒 SEGURANÇA: Rate limiting
+    if (email && password && window.MoneyFlowSecurity) {
+        if (!window.MoneyFlowSecurity.checkRateLimit('login', email)) {
+            showToast('⏱️ Muitas tentativas. Aguarde 1 minuto.', 'error');
+            return;
+        }
+    }
+    
     // Se campos vazios, entrar no modo demo
     if (!email || !password) {
         console.log('🎬 Entrando no modo demo');
@@ -1018,6 +1026,21 @@ function addTransaction() {
     if (!description || !amount || !date) {
         alert('Por favor, preencha todos os campos!');
         return;
+    }
+
+    // 🔒 SEGURANÇA: Rate limiting para transações
+    if (window.MoneyFlowSecurity) {
+        if (!window.MoneyFlowSecurity.checkRateLimit('add_transaction', currentUser.id)) {
+            showToast('⏱️ Muitas transações rápidas. Aguarde.', 'error');
+            return;
+        }
+        
+        // 🔒 SEGURANÇA: Sanitizar descrição
+        const sanitizedDescription = window.MoneyFlowSecurity.sanitizeInput(description);
+        if (sanitizedDescription !== description) {
+            showToast('⚠️ Descrição contém caracteres inválidos', 'error');
+            return;
+        }
     }
 
     // AI Auto-categorization simulation with ML confidence
