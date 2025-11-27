@@ -198,5 +198,5 @@ MIT License - Hackathon FMU 2025.2
 
 ---
 
-**Desenvolvido com 💚 por [Nome da Equipe]**  
+**Desenvolvido com 💚 por MoneyFlow Team**  
 *Hackathon FMU 2025.2 x aiiaLabs*
