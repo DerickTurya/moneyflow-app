@@ -4274,6 +4274,42 @@ input:checked + .slider:before {
     .feature-item {
         font-size: 14px;
     }
+    
+    /* International Transfer - Mobile */
+    .converter-input {
+        flex-direction: column;
+        gap: 8px;
+    }
+    
+    .converter-input select {
+        width: 100%;
+        font-size: 14px;
+    }
+    
+    .converter-input input {
+        width: 100%;
+        font-size: 18px;
+        text-align: center;
+    }
+    
+    .swap-button {
+        width: 40px;
+        height: 40px;
+        margin: 8px 0;
+    }
+    
+    .currency-converter {
+        gap: 12px;
+    }
+    
+    .currency-cards {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+    
+    .exchange-rate-widget {
+        padding: 16px;
+    }
 }
 
 /* Virtual Card Styles */
