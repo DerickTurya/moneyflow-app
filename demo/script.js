@@ -1446,37 +1446,27 @@ function realizarTransferenciaPix() {
     
     transactions.unshift(newTransaction);
     
-    // Salva no localStorage se for usuário real
-    if (currentUser && currentUser.email) {
-        localStorage.setItem('moneyflow_transactions', JSON.stringify(transactions));
-    }
+    // Salva no localStorage
+    localStorage.setItem('moneyflow_transactions', JSON.stringify(transactions));
     
     // Tracking completo da transferência
     if (window.MoneyFlowTracker) {
-        console.log('🎯 Enviando evento de transferência PIX:', amount, keyType);
+        const keyType = key.includes('@') ? 'email' : 
+                       key.replace(/\D/g, '').length === 11 ? 'cpf' : 
+                       key.includes('(') ? 'phone' : 'random';
         
         window.MoneyFlowTracker.trackTransaction({
             transaction_id: newTransaction.id,
             amount: amount,
             type: 'pix_transfer',
-            category: 'transfer',
-            description: `PIX para ${key}`,
+            category: category,
+            description: description || `PIX para ${recipientName}`,
             payment_method: 'pix',
             pix_key_type: keyType,
-            pix_key: key.substring(0, 20) + '...', // Parcial por segurança
+            ai_categorized: aiCategorized,
+            ai_confidence: confidence,
             success: true
         });
-        
-        // Track do botão de transferir
-        window.MoneyFlowTracker.trackClick({
-            button: 'pix_transfer_button',
-            amount: amount,
-            key_type: keyType,
-            screen: 'pix-screen',
-            action: 'pix_transfer'
-        });
-        
-        console.log('✅ Eventos de PIX enviados ao tracking');
     }
     
     // Atualiza displays
@@ -1486,30 +1476,21 @@ function realizarTransferenciaPix() {
     initChart();
     updateGamificationPoints(10); // +10 pontos por PIX
     
-    // Verifica notificações imediatamente após transação importante (força verificação ignorando cooldown)
-    setTimeout(() => {
-        checkAndSendSmartNotifications(true);
-    }, 500);
-    
-    // Mostra mensagem de sucesso
-    const modal = document.getElementById('success-modal');
-    const modalTitle = document.getElementById('modal-title');
-    const modalMessage = document.getElementById('modal-message');
-    
-    modalTitle.textContent = '✅ Transferência Concluída!';
-    modalMessage.textContent = `PIX de R$ ${amount.toFixed(2).replace('.', ',')} realizado com sucesso para ${key}`;
-    
-    modal.classList.add('active');
+    // Mostra toast de sucesso
+    showToast(`✅ PIX de R$ ${amount.toFixed(2)} enviado${aiCategorized ? ' • Categoria: ' + categoryName : ''}`, '#00b894');
     
     // Limpa campos
-    amountInput.value = '';
-    keyInput.value = '';
+    document.getElementById('pix-recipient-name').value = '';
+    document.getElementById('pix-key').value = '';
+    document.getElementById('pix-amount').value = '';
+    document.getElementById('pix-description').value = '';
+    document.getElementById('pix-auto-category').style.display = 'none';
+    pixAutoCategory = null;
     
-    // Auto fecha e volta pro dashboard
+    // Volta pro dashboard após 2 segundos
     setTimeout(() => {
-        closeModal();
         showScreen('dashboard-screen');
-    }, 3000);
+    }, 2000);
 }
 
 // Resgatar Cashback
