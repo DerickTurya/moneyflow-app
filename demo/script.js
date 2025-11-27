@@ -447,6 +447,8 @@ window.showScreen = function(screenId) {
             updateUserInterface();
         } else if (screenId === 'budgets-screen') {
             renderBudgets();
+        } else if (screenId === 'insurance-screen') {
+            renderMyInsurances();
         }
     } else {
         console.error('❌ Screen não encontrado:', screenId);
@@ -3731,6 +3733,281 @@ function deleteBudget(budgetId) {
         localStorage.setItem('moneyflow_budgets', JSON.stringify(budgets));
         showToast('Orçamento excluído com sucesso!', '#00b894');
         renderBudgets();
+    }
+}
+
+// Insurance Management
+let myInsurances = JSON.parse(localStorage.getItem('moneyflow_insurances')) || [];
+let currentInsuranceQuote = null;
+
+function showInsuranceQuote(type) {
+    currentInsuranceQuote = { type };
+    const modal = document.getElementById('insurance-quote-modal');
+    const formContent = document.getElementById('insurance-form-content');
+    const modalTitle = document.getElementById('insurance-modal-title');
+    
+    const insuranceData = {
+        'auto': {
+            title: '🚗 Seguro Auto',
+            fields: `
+                <div class="input-group">
+                    <label>Marca do Veículo</label>
+                    <input type="text" id="ins-brand" placeholder="Ex: Toyota" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                </div>
+                <div class="input-group">
+                    <label>Modelo</label>
+                    <input type="text" id="ins-model" placeholder="Ex: Corolla" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                </div>
+                <div class="input-group">
+                    <label>Ano</label>
+                    <input type="number" id="ins-year" placeholder="2023" min="1990" max="2025" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                </div>
+                <div class="input-group">
+                    <label>Plano</label>
+                    <select id="ins-plan" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                        <option value="basic">Básico - Cobertura terceiros</option>
+                        <option value="complete">Completo - Cobertura total</option>
+                        <option value="premium">Premium - Carro reserva incluído</option>
+                    </select>
+                </div>`,
+            basePrice: 89.90
+        },
+        'home': {
+            title: '🏠 Seguro Residencial',
+            fields: `
+                <div class="input-group">
+                    <label>Tipo de Imóvel</label>
+                    <select id="ins-property-type" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                        <option value="apartment">Apartamento</option>
+                        <option value="house">Casa</option>
+                        <option value="condo">Condomínio</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label>Valor do Imóvel (R$)</label>
+                    <input type="number" id="ins-property-value" placeholder="500000" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                </div>
+                <div class="input-group">
+                    <label>Cobertura</label>
+                    <select id="ins-plan" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                        <option value="basic">Básico - Incêndio e roubo</option>
+                        <option value="complete">Completo - + Danos elétricos</option>
+                        <option value="premium">Premium - Cobertura total</option>
+                    </select>
+                </div>`,
+            basePrice: 45.90
+        },
+        'life': {
+            title: '❤️ Seguro Vida',
+            fields: `
+                <div class="input-group">
+                    <label>Idade</label>
+                    <input type="number" id="ins-age" placeholder="30" min="18" max="80" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                </div>
+                <div class="input-group">
+                    <label>Cobertura Desejada (R$)</label>
+                    <input type="number" id="ins-coverage" placeholder="100000" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                </div>
+                <div class="input-group">
+                    <label>Plano</label>
+                    <select id="ins-plan" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                        <option value="basic">Individual</option>
+                        <option value="complete">Familiar - Até 4 pessoas</option>
+                        <option value="premium">Premium - Cobertura ampliada</option>
+                    </select>
+                </div>`,
+            basePrice: 29.90
+        },
+        'phone': {
+            title: '📱 Seguro Celular',
+            fields: `
+                <div class="input-group">
+                    <label>Marca</label>
+                    <input type="text" id="ins-brand" placeholder="Ex: Apple" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                </div>
+                <div class="input-group">
+                    <label>Modelo</label>
+                    <input type="text" id="ins-model" placeholder="Ex: iPhone 14" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                </div>
+                <div class="input-group">
+                    <label>Valor do Aparelho (R$)</label>
+                    <input type="number" id="ins-phone-value" placeholder="3000" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                </div>
+                <div class="input-group">
+                    <label>Cobertura</label>
+                    <select id="ins-plan" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px;">
+                        <option value="basic">Básico - Roubo</option>
+                        <option value="complete">Completo - Roubo + Quebra</option>
+                        <option value="premium">Premium - Cobertura total</option>
+                    </select>
+                </div>`,
+            basePrice: 19.90
+        }
+    };
+    
+    const data = insuranceData[type];
+    modalTitle.textContent = data.title;
+    formContent.innerHTML = data.fields + `
+        <button class="btn-primary" onclick="calculateInsuranceQuote()" style="width: 100%; margin-top: 16px;">
+            <span class="material-icons">calculate</span>
+            Calcular Cotação
+        </button>
+    `;
+    
+    currentInsuranceQuote.basePrice = data.basePrice;
+    document.getElementById('insurance-quote-result').style.display = 'none';
+    modal.classList.add('active');
+}
+
+function closeInsuranceModal() {
+    document.getElementById('insurance-quote-modal').classList.remove('active');
+    currentInsuranceQuote = null;
+}
+
+function calculateInsuranceQuote() {
+    const plan = document.getElementById('ins-plan').value;
+    const planMultipliers = {
+        'basic': 1,
+        'complete': 1.5,
+        'premium': 2.2
+    };
+    
+    const monthlyPrice = currentInsuranceQuote.basePrice * planMultipliers[plan];
+    const coverage = monthlyPrice * 500; // Simulação de cobertura
+    const firstPayment = monthlyPrice * 1.1; // Taxa de adesão
+    
+    currentInsuranceQuote.monthlyPrice = monthlyPrice;
+    currentInsuranceQuote.coverage = coverage;
+    currentInsuranceQuote.firstPayment = firstPayment;
+    currentInsuranceQuote.plan = plan;
+    
+    document.getElementById('insurance-monthly-price').textContent = `R$ ${monthlyPrice.toFixed(2)}`;
+    document.getElementById('insurance-coverage').textContent = `R$ ${coverage.toFixed(2)}`;
+    document.getElementById('insurance-first-payment').textContent = `R$ ${firstPayment.toFixed(2)}`;
+    document.getElementById('insurance-quote-result').style.display = 'block';
+}
+
+function contractInsurance() {
+    if (!currentInsuranceQuote || !currentInsuranceQuote.monthlyPrice) {
+        showToast('Por favor, calcule a cotação primeiro.', '#e74c3c');
+        return;
+    }
+    
+    const insuranceNames = {
+        'auto': 'Seguro Auto',
+        'home': 'Seguro Residencial',
+        'life': 'Seguro Vida',
+        'phone': 'Seguro Celular'
+    };
+    
+    const insuranceIcons = {
+        'auto': '🚗',
+        'home': '🏠',
+        'life': '❤️',
+        'phone': '📱'
+    };
+    
+    const planNames = {
+        'basic': 'Básico',
+        'complete': 'Completo',
+        'premium': 'Premium'
+    };
+    
+    const newInsurance = {
+        id: myInsurances.length + 1,
+        type: currentInsuranceQuote.type,
+        name: insuranceNames[currentInsuranceQuote.type],
+        icon: insuranceIcons[currentInsuranceQuote.type],
+        plan: planNames[currentInsuranceQuote.plan],
+        monthlyPrice: currentInsuranceQuote.monthlyPrice,
+        coverage: currentInsuranceQuote.coverage,
+        startDate: new Date().toISOString().split('T')[0],
+        status: 'active'
+    };
+    
+    myInsurances.push(newInsurance);
+    localStorage.setItem('moneyflow_insurances', JSON.stringify(myInsurances));
+    
+    // Adicionar transação
+    const transaction = {
+        id: transactions.length + 1,
+        description: `${newInsurance.name} - ${newInsurance.plan}`,
+        amount: -newInsurance.firstPayment,
+        type: 'expense',
+        category: 'other',
+        categoryName: 'Outros',
+        date: new Date().toISOString().split('T')[0],
+        icon: newInsurance.icon
+    };
+    transactions.unshift(transaction);
+    localStorage.setItem('moneyflow_transactions', JSON.stringify(transactions));
+    
+    showToast(`✅ ${newInsurance.name} contratado com sucesso!`, '#00b894');
+    
+    if (typeof updateGamificationPoints === 'function') {
+        updateGamificationPoints(15);
+    }
+    
+    if (window.MoneyFlowTracker) {
+        window.MoneyFlowTracker.track('insurance_contracted', {
+            type: newInsurance.type,
+            plan: newInsurance.plan,
+            monthly_price: newInsurance.monthlyPrice,
+            coverage: newInsurance.coverage
+        });
+    }
+    
+    updateBalanceDisplay();
+    renderRecentTransactions();
+    closeInsuranceModal();
+    renderMyInsurances();
+}
+
+function renderMyInsurances() {
+    const list = document.getElementById('my-insurances-list');
+    if (!list) return;
+    
+    if (myInsurances.length === 0) {
+        list.innerHTML = '<p style="text-align: center; color: #666; padding: 32px;">Nenhum seguro contratado ainda.</p>';
+        return;
+    }
+    
+    list.innerHTML = myInsurances.map(ins => `
+        <div class="insurance-card" style="opacity: 1; border: 2px solid #00b894;">
+            <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 12px;">
+                <div>
+                    <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                        <span style="font-size: 24px;">${ins.icon}</span>
+                        <h4 style="margin: 0;">${ins.name}</h4>
+                    </div>
+                    <span style="display: inline-block; background: #00b894; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600;">Plano ${ins.plan}</span>
+                </div>
+                <button onclick="cancelInsurance(${ins.id})" style="background: none; border: none; color: #e74c3c; cursor: pointer; padding: 4px;">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <span style="color: #666;">Mensalidade:</span>
+                <strong style="color: #00b894;">R$ ${ins.monthlyPrice.toFixed(2)}/mês</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <span style="color: #666;">Cobertura:</span>
+                <strong>R$ ${ins.coverage.toFixed(2)}</strong>
+            </div>
+            <div style="display: flex; justify-content: space-between;">
+                <span style="color: #666;">Contratado em:</span>
+                <span>${new Date(ins.startDate).toLocaleDateString('pt-BR')}</span>
+            </div>
+        </div>
+    `).join('');
+}
+
+function cancelInsurance(insuranceId) {
+    if (confirm('Tem certeza que deseja cancelar este seguro?')) {
+        myInsurances = myInsurances.filter(ins => ins.id !== insuranceId);
+        localStorage.setItem('moneyflow_insurances', JSON.stringify(myInsurances));
+        showToast('Seguro cancelado com sucesso!', '#00b894');
+        renderMyInsurances();
     }
 }
 

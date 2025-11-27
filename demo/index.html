@@ -2199,9 +2199,10 @@
                                 <div class="insurance-features">
                                     <span>✓ Cobertura total</span>
                                     <span>✓ Assistência 24h</span>
+                                    <span>✓ Carro reserva</span>
                                 </div>
                             </div>
-                            <button class="btn-secondary small">Cotar</button>
+                            <button class="btn-secondary small" onclick="showInsuranceQuote('auto')">Cotar</button>
                         </div>
                         <div class="insurance-card">
                             <div class="insurance-icon">🏠</div>
@@ -2211,9 +2212,10 @@
                                 <div class="insurance-features">
                                     <span>✓ Incêndio e roubo</span>
                                     <span>✓ Danos elétricos</span>
+                                    <span>✓ Vidros quebrados</span>
                                 </div>
                             </div>
-                            <button class="btn-secondary small">Cotar</button>
+                            <button class="btn-secondary small" onclick="showInsuranceQuote('home')">Cotar</button>
                         </div>
                         <div class="insurance-card">
                             <div class="insurance-icon">❤️</div>
@@ -2223,9 +2225,10 @@
                                 <div class="insurance-features">
                                     <span>✓ Cobertura familiar</span>
                                     <span>✓ Assistência funeral</span>
+                                    <span>✓ Invalidez</span>
                                 </div>
                             </div>
-                            <button class="btn-secondary small">Cotar</button>
+                            <button class="btn-secondary small" onclick="showInsuranceQuote('life')">Cotar</button>
                         </div>
                         <div class="insurance-card">
                             <div class="insurance-icon">📱</div>
@@ -2235,10 +2238,19 @@
                                 <div class="insurance-features">
                                     <span>✓ Roubo e quebra</span>
                                     <span>✓ Troca rápida</span>
+                                    <span>✓ Oxidação</span>
                                 </div>
                             </div>
-                            <button class="btn-secondary small">Cotar</button>
+                            <button class="btn-secondary small" onclick="showInsuranceQuote('phone')">Cotar</button>
                         </div>
+                    </div>
+                </div>
+
+                <!-- My Insurance Policies -->
+                <div class="section">
+                    <h3 class="section-title">Meus Seguros</h3>
+                    <div id="my-insurances-list">
+                        <p style="text-align: center; color: #666; padding: 32px;">Nenhum seguro contratado ainda.</p>
                     </div>
                 </div>
             </div>
@@ -3024,6 +3036,42 @@
                     <p>🔥 Streak de 7 dias! +50 pontos</p>
                 </div>
                 <button class="btn-primary" onclick="closeModal()">OK</button>
+            </div>
+        </div>
+
+        <!-- Insurance Quote Modal -->
+        <div id="insurance-quote-modal" class="modal">
+            <div class="modal-content" style="max-width: 600px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                    <h3 style="margin: 0;" id="insurance-modal-title">Cotar Seguro</h3>
+                    <button onclick="closeInsuranceModal()" style="background: none; border: none; cursor: pointer; padding: 8px;">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+
+                <div id="insurance-form-content">
+                    <!-- Conteúdo dinâmico baseado no tipo de seguro -->
+                </div>
+
+                <div id="insurance-quote-result" style="display: none; background: #f8f9fa; padding: 20px; border-radius: 12px; margin-top: 20px;">
+                    <h4 style="margin-bottom: 16px;">💰 Sua Cotação</h4>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                        <span>Valor mensal:</span>
+                        <strong id="insurance-monthly-price">R$ 0,00</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                        <span>Cobertura:</span>
+                        <strong id="insurance-coverage">R$ 0,00</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 20px;">
+                        <span>Primeira parcela:</span>
+                        <strong id="insurance-first-payment">R$ 0,00</strong>
+                    </div>
+                    <button class="btn-primary" onclick="contractInsurance()" style="width: 100%;">
+                        <span class="material-icons">check_circle</span>
+                        Contratar Seguro
+                    </button>
+                </div>
             </div>
         </div>
 
