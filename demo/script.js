@@ -3356,6 +3356,179 @@ function processTransportRecharge() {
     }
 }
 
+// TV Recharge Functions
+let selectedTvOperator = '';
+
+function selectTvOperator(operator) {
+    selectedTvOperator = operator;
+    const cards = document.querySelectorAll('#tv-content .operator-card');
+    cards.forEach(card => card.style.transform = 'scale(1)');
+    event.target.closest('.operator-card').style.transform = 'scale(1.1)';
+}
+
+function selectTvValue(value) {
+    selectedRechargeValue = value;
+    
+    const tvContent = document.getElementById('tv-content');
+    tvContent.querySelectorAll('.value-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    event.target.closest('.value-card').classList.add('selected');
+}
+
+function processTvRecharge() {
+    const tvNumber = document.getElementById('tv-number').value;
+    
+    if (!selectedTvOperator) {
+        showToast('Por favor, selecione uma operadora de TV.', '#e74c3c');
+        return;
+    }
+    
+    if (!tvNumber) {
+        showToast('Por favor, digite o número do contrato.', '#e74c3c');
+        return;
+    }
+    
+    if (selectedRechargeValue === 0) {
+        showToast('Por favor, selecione o valor da recarga.', '#e74c3c');
+        return;
+    }
+    
+    const packageNames = {
+        50: 'Básico',
+        80: 'Intermediário',
+        120: 'Premium',
+        200: 'Ultra HD'
+    };
+    
+    showToast(`✅ Recarga realizada com sucesso! R$ ${selectedRechargeValue.toFixed(2)} - Pacote ${packageNames[selectedRechargeValue]} | ${selectedTvOperator.toUpperCase()}`, '#00b894');
+    
+    if (typeof updateGamificationPoints === 'function') {
+        updateGamificationPoints(5);
+    }
+    
+    const newTransaction = {
+        id: transactions.length + 1,
+        description: `Recarga ${selectedTvOperator.toUpperCase()} TV`,
+        amount: -selectedRechargeValue,
+        type: 'expense',
+        category: 'other',
+        categoryName: 'Outros',
+        date: new Date().toISOString().split('T')[0],
+        icon: '📺'
+    };
+    transactions.unshift(newTransaction);
+    
+    if (window.MoneyFlowTracker) {
+        window.MoneyFlowTracker.trackTransaction({
+            transaction_id: newTransaction.id,
+            amount: selectedRechargeValue,
+            type: 'recharge',
+            category: 'other',
+            description: `Recarga ${selectedTvOperator.toUpperCase()} TV`,
+            payment_method: 'tv_recharge',
+            operator: selectedTvOperator,
+            package: packageNames[selectedRechargeValue]
+        });
+    }
+    
+    updateBalanceDisplay();
+    renderRecentTransactions();
+    
+    document.getElementById('tv-number').value = '';
+    selectedTvOperator = '';
+    selectedRechargeValue = 0;
+    document.querySelectorAll('#tv-content .value-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+}
+
+// Games Recharge Functions
+let selectedGamesPlatform = '';
+
+function selectGamesPlatform(platform) {
+    selectedGamesPlatform = platform;
+    const cards = document.querySelectorAll('#games-content .operator-card');
+    cards.forEach(card => card.style.transform = 'scale(1)');
+    event.target.closest('.operator-card').style.transform = 'scale(1.1)';
+}
+
+function selectGamesValue(value) {
+    selectedRechargeValue = value;
+    
+    const gamesContent = document.getElementById('games-content');
+    gamesContent.querySelectorAll('.value-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+    event.target.closest('.value-card').classList.add('selected');
+}
+
+function processGamesRecharge() {
+    const gamesAccount = document.getElementById('games-account').value;
+    
+    if (!selectedGamesPlatform) {
+        showToast('Por favor, selecione uma plataforma.', '#e74c3c');
+        return;
+    }
+    
+    if (!gamesAccount) {
+        showToast('Por favor, digite o email ou ID da conta.', '#e74c3c');
+        return;
+    }
+    
+    if (selectedRechargeValue === 0) {
+        showToast('Por favor, selecione o valor da recarga.', '#e74c3c');
+        return;
+    }
+    
+    const platformNames = {
+        'steam': 'Steam',
+        'psn': 'PlayStation Network',
+        'xbox': 'Xbox Live',
+        'nintendo': 'Nintendo eShop'
+    };
+    
+    showToast(`✅ Recarga realizada com sucesso! R$ ${selectedRechargeValue.toFixed(2)} - ${platformNames[selectedGamesPlatform]}`, '#00b894');
+    
+    if (typeof updateGamificationPoints === 'function') {
+        updateGamificationPoints(5);
+    }
+    
+    const newTransaction = {
+        id: transactions.length + 1,
+        description: `Recarga ${platformNames[selectedGamesPlatform]}`,
+        amount: -selectedRechargeValue,
+        type: 'expense',
+        category: 'leisure',
+        categoryName: 'Lazer',
+        date: new Date().toISOString().split('T')[0],
+        icon: '🎮'
+    };
+    transactions.unshift(newTransaction);
+    
+    if (window.MoneyFlowTracker) {
+        window.MoneyFlowTracker.trackTransaction({
+            transaction_id: newTransaction.id,
+            amount: selectedRechargeValue,
+            type: 'recharge',
+            category: 'leisure',
+            description: `Recarga ${platformNames[selectedGamesPlatform]}`,
+            payment_method: 'games_recharge',
+            platform: selectedGamesPlatform
+        });
+    }
+    
+    updateBalanceDisplay();
+    renderRecentTransactions();
+    
+    document.getElementById('games-account').value = '';
+    selectedGamesPlatform = '';
+    selectedRechargeValue = 0;
+    document.querySelectorAll('#games-content .value-card').forEach(card => {
+        card.classList.remove('selected');
+    });
+}
+
 // Loan Calculator
 function calculateLoan() {
     const amount = parseFloat(document.getElementById('loan-amount').value);

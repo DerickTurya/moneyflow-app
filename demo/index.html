@@ -1556,6 +1556,130 @@
                     </div>
                 </div>
 
+                <!-- Recarga de TV Pré -->
+                <div class="recharge-content" id="tv-content" style="display: none;">
+                    <div class="section">
+                        <h3 class="section-title">Operadora de TV</h3>
+                        <div class="operators-grid">
+                            <div class="operator-card" onclick="selectTvOperator('sky')">
+                                <div class="operator-logo" style="background: linear-gradient(135deg, #0066cc, #0099ff);">SKY</div>
+                            </div>
+                            <div class="operator-card" onclick="selectTvOperator('claro-tv')">
+                                <div class="operator-logo" style="background: linear-gradient(135deg, #cc0000, #ff0000);">Claro TV</div>
+                            </div>
+                            <div class="operator-card" onclick="selectTvOperator('vivo-tv')">
+                                <div class="operator-logo" style="background: linear-gradient(135deg, #660099, #9933cc);">Vivo TV</div>
+                            </div>
+                            <div class="operator-card" onclick="selectTvOperator('oi-tv')">
+                                <div class="operator-logo" style="background: linear-gradient(135deg, #ff9900, #ffcc00);">Oi TV</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="card">
+                            <div class="input-group">
+                                <label>Número do Contrato / Cartão</label>
+                                <input type="text" id="tv-number" placeholder="Digite o número do contrato" maxlength="20">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">Pacotes Disponíveis</h3>
+                        <div class="recharge-values-grid">
+                            <div class="value-card" onclick="selectTvValue(50)">
+                                <span class="value-amount">R$ 50</span>
+                                <span class="value-bonus">Básico</span>
+                            </div>
+                            <div class="value-card" onclick="selectTvValue(80)">
+                                <span class="value-amount">R$ 80</span>
+                                <span class="value-bonus">Intermediário</span>
+                            </div>
+                            <div class="value-card" onclick="selectTvValue(120)">
+                                <span class="value-amount">R$ 120</span>
+                                <span class="value-bonus">Premium</span>
+                            </div>
+                            <div class="value-card" onclick="selectTvValue(200)">
+                                <span class="value-amount">R$ 200</span>
+                                <span class="value-bonus">Ultra HD</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="card">
+                            <button class="btn-primary" onclick="processTvRecharge()">
+                                <span class="material-icons">check_circle</span>
+                                Confirmar Recarga
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recarga de Games -->
+                <div class="recharge-content" id="games-content" style="display: none;">
+                    <div class="section">
+                        <h3 class="section-title">Plataforma</h3>
+                        <div class="operators-grid">
+                            <div class="operator-card" onclick="selectGamesPlatform('steam')">
+                                <div class="operator-logo" style="background: linear-gradient(135deg, #171a21, #2a475e);">Steam</div>
+                            </div>
+                            <div class="operator-card" onclick="selectGamesPlatform('psn')">
+                                <div class="operator-logo" style="background: linear-gradient(135deg, #003087, #0070cc);">PlayStation</div>
+                            </div>
+                            <div class="operator-card" onclick="selectGamesPlatform('xbox')">
+                                <div class="operator-logo" style="background: linear-gradient(135deg, #107c10, #10a810);">Xbox</div>
+                            </div>
+                            <div class="operator-card" onclick="selectGamesPlatform('nintendo')">
+                                <div class="operator-logo" style="background: linear-gradient(135deg, #e60012, #ff6b6b);">Nintendo</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="card">
+                            <div class="input-group">
+                                <label>Email / ID da Conta</label>
+                                <input type="text" id="games-account" placeholder="Digite seu email ou ID" maxlength="50">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">Valor do Crédito</h3>
+                        <div class="recharge-values-grid">
+                            <div class="value-card" onclick="selectGamesValue(30)">
+                                <span class="value-amount">R$ 30</span>
+                            </div>
+                            <div class="value-card" onclick="selectGamesValue(50)">
+                                <span class="value-amount">R$ 50</span>
+                            </div>
+                            <div class="value-card" onclick="selectGamesValue(80)">
+                                <span class="value-amount">R$ 80</span>
+                            </div>
+                            <div class="value-card" onclick="selectGamesValue(100)">
+                                <span class="value-amount">R$ 100</span>
+                            </div>
+                            <div class="value-card" onclick="selectGamesValue(150)">
+                                <span class="value-amount">R$ 150</span>
+                            </div>
+                            <div class="value-card" onclick="selectGamesValue(200)">
+                                <span class="value-amount">R$ 200</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="card">
+                            <button class="btn-primary" onclick="processGamesRecharge()">
+                                <span class="material-icons">check_circle</span>
+                                Confirmar Recarga
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Recargas Recentes -->
                 <div class="section">
                     <h3 class="section-title">Recargas Recentes</h3>
