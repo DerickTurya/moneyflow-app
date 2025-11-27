@@ -1268,29 +1268,18 @@ body {
     align-items: center;
 }
 
-.currency-symbol {
-    position: absolute;
-    left: 16px;
-    font-size: 20px;
-    font-weight: 700;
-    color: var(--gray);
-    pointer-events: none;
-    z-index: 1;
-}
-
-.pix-amount-input input {
+/* PIX Amount Input - Simplified without overlay */
+.pix-amount-simple {
     width: 100%;
-    padding: 16px 16px 16px 48px;
+    padding: 16px;
     border: 2px solid var(--light);
     border-radius: 12px;
     font-size: 24px;
     font-weight: 700;
     color: var(--primary);
-    position: relative;
-    z-index: 2;
 }
 
-.pix-amount-input input:focus {
+.pix-amount-simple:focus {
     border-color: var(--primary);
     outline: none;
 }
