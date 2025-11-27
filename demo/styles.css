@@ -1268,18 +1268,29 @@ body {
     align-items: center;
 }
 
-/* PIX Amount Input - Simplified without overlay */
-.pix-amount-simple {
+.currency-symbol {
+    position: absolute;
+    left: 16px;
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--gray);
+    pointer-events: none;
+    z-index: 1;
+}
+
+.pix-amount-input input {
     width: 100%;
-    padding: 16px;
+    padding: 16px 16px 16px 48px;
     border: 2px solid var(--light);
     border-radius: 12px;
     font-size: 24px;
     font-weight: 700;
     color: var(--primary);
+    position: relative;
+    z-index: 2;
 }
 
-.pix-amount-simple:focus {
+.pix-amount-input input:focus {
     border-color: var(--primary);
     outline: none;
 }
