@@ -1865,173 +1865,63 @@
                     <span class="material-icons">arrow_back</span>
                 </button>
                 <h2>PIX</h2>
-                <button class="icon-button" onclick="showPixHistory()">
-                    <span class="material-icons">history</span>
-                </button>
+                <div></div>
             </div>
             <div class="content">
                 <div class="pix-container">
-                    <!-- PIX Balance Card -->
-                    <div class="pix-balance-card">
-                        <div class="pix-balance-header">
-                            <span class="material-icons">account_balance_wallet</span>
-                            <span>Saldo Disponível</span>
-                        </div>
-                        <div class="pix-balance-amount">R$ 2.450,80</div>
-                        <div class="pix-limit">
-                            <span class="material-icons">info</span>
-                            Limite diário: R$ 1.000,00
-                        </div>
+                    <div class="input-group">
+                        <label>Nome do Destinatário</label>
+                        <input type="text" id="pix-recipient-name" placeholder="Ex: Maria Silva" oninput="autoCategorizePix()">
+                    </div>
+                    <div class="pix-amount">
+                        <label>Valor</label>
+                        <input type="number" id="pix-amount" placeholder="0.00" step="0.01" class="pix-input" oninput="autoCategorizePix()">
+                    </div>
+                    <div class="input-group">
+                        <label>Chave PIX (CPF, Telefone, Email ou Aleatória)</label>
+                        <input type="text" id="pix-key" placeholder="Digite a chave PIX">
+                    </div>
+                    <div class="input-group">
+                        <label>Descrição (opcional)</label>
+                        <input type="text" id="pix-description" placeholder="Ex: Almoço, Aluguel, Presente..." oninput="autoCategorizePix()">
                     </div>
 
-                    <!-- PIX Form -->
-                    <div class="pix-form">
-                        <div class="input-group">
-                            <label>Para quem você vai enviar?</label>
-                            <input type="text" id="pix-recipient-name" placeholder="Nome do destinatário" oninput="autoCategorizePix()">
+                    <!-- Auto Categorização com IA -->
+                    <div class="auto-category-card" id="pix-auto-category" style="display: none; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border: 2px solid #1976d2; border-radius: 12px; padding: 16px; margin: 16px 0;">
+                        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px; font-size: 14px; font-weight: 600;">
+                            <span class="material-icons" style="color: #1976d2;">smart_toy</span>
+                            <span>Categoria sugerida pela IA</span>
+                            <span id="pix-confidence" style="margin-left: auto; background: #1976d2; color: white; padding: 4px 12px; border-radius: 20px; font-size: 12px;">95%</span>
                         </div>
-
-                        <div class="input-group">
-                            <label>Chave PIX</label>
-                            <div class="pix-key-input">
-                                <select id="pix-key-type" onchange="updatePixKeyPlaceholder()">
-                                    <option value="cpf">CPF</option>
-                                    <option value="email">Email</option>
-                                    <option value="phone">Telefone</option>
-                                    <option value="random">Aleatória</option>
-                                </select>
-                                <input type="text" id="pix-key" placeholder="Digite a chave PIX">
-                            </div>
-                        </div>
-
-                        <div class="input-group">
-                            <label>Valor</label>
-                            <div class="pix-amount-input">
-                                <span class="currency-symbol">R$</span>
-                                <input type="number" id="pix-amount" placeholder="0,00" step="0.01" oninput="autoCategorizePix()">
-                            </div>
-                        </div>
-
-                        <div class="input-group">
-                            <label>Descrição (opcional)</label>
-                            <input type="text" id="pix-description" placeholder="Ex: Almoço, Aluguel, Presente..." oninput="autoCategorizePix()">
-                        </div>
-
-                        <!-- Auto Categorização com IA -->
-                        <div class="auto-category-card" id="pix-auto-category" style="display: none;">
-                            <div class="auto-category-header">
-                                <span class="material-icons">smart_toy</span>
-                                <span>Categoria sugerida pela IA</span>
-                                <span class="ai-confidence" id="pix-confidence">95%</span>
-                            </div>
-                            <div class="auto-category-content">
-                                <div class="category-suggestion" id="pix-suggested-category">
-                                    <span class="category-icon" id="pix-category-icon">🍔</span>
-                                    <span class="category-name" id="pix-category-name">Alimentação</span>
-                                </div>
-                                <button class="btn-change-category" onclick="showCategorySelector()">Alterar</button>
-                            </div>
-                        </div>
-
-                        <button class="btn-primary pix-send-btn" onclick="realizarTransferenciaPix()">
-                            <span class="material-icons">pix</span>
-                            Enviar PIX
-                        </button>
-                    </div>
-
-                    <!-- Chaves Salvas -->
-                    <div class="pix-saved-keys">
-                        <div class="section-header-row">
-                            <h3 class="section-title">
-                                <span class="material-icons">bookmark</span>
-                                Favoritos
-                            </h3>
-                            <button class="btn-text" onclick="showAddPixKeyModal()">
-                                <span class="material-icons">add</span>
-                                Adicionar
-                            </button>
-                        </div>
-                        
-                        <div class="pix-favorites-grid">
-                            <div class="pix-favorite-card" onclick="selectPixRecipient('Maria Silva', 'maria@email.com', 'Alimentação')">
-                                <div class="favorite-avatar">
-                                    <span class="material-icons">restaurant</span>
-                                </div>
-                                <div class="favorite-info">
-                                    <strong>Maria Silva</strong>
-                                    <p>maria@email.com</p>
-                                    <span class="favorite-tag">🍔 Alimentação</span>
-                                </div>
-                            </div>
-
-                            <div class="pix-favorite-card" onclick="selectPixRecipient('Pedro Santos', '123.456.789-00', 'Moradia')">
-                                <div class="favorite-avatar">
-                                    <span class="material-icons">home</span>
-                                </div>
-                                <div class="favorite-info">
-                                    <strong>Pedro Santos</strong>
-                                    <p>123.456.789-00</p>
-                                    <span class="favorite-tag">🏠 Moradia</span>
-                                </div>
-                            </div>
-
-                            <div class="pix-favorite-card" onclick="selectPixRecipient('João Almeida', '(11) 98765-4321', 'Transporte')">
-                                <div class="favorite-avatar">
-                                    <span class="material-icons">directions_car</span>
-                                </div>
-                                <div class="favorite-info">
-                                    <strong>João Almeida</strong>
-                                    <p>(11) 98765-4321</p>
-                                    <span class="favorite-tag">🚗 Transporte</span>
-                                </div>
-                            </div>
-
-                            <div class="pix-favorite-card" onclick="selectPixRecipient('Ana Costa', 'ana.costa@email.com', 'Lazer')">
-                                <div class="favorite-avatar">
-                                    <span class="material-icons">movie</span>
-                                </div>
-                                <div class="favorite-info">
-                                    <strong>Ana Costa</strong>
-                                    <p>ana.costa@email.com</p>
-                                    <span class="favorite-tag">🎬 Lazer</span>
-                                </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div style="display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: white; border-radius: 12px; flex: 1;">
+                                <span id="pix-category-icon" style="font-size: 28px;">🍔</span>
+                                <span id="pix-category-name" style="font-size: 16px; font-weight: 600;">Alimentação</span>
                             </div>
                         </div>
                     </div>
 
-                    <!-- PIX Recentes -->
-                    <div class="pix-recent">
-                        <h3 class="section-title">
-                            <span class="material-icons">schedule</span>
-                            Recentes
-                        </h3>
-                        <div class="pix-recent-list">
-                            <div class="pix-recent-item">
-                                <div class="pix-recent-icon">
-                                    <span class="material-icons">person</span>
-                                </div>
-                                <div class="pix-recent-info">
-                                    <strong>Carlos Eduardo</strong>
-                                    <p>Ontem • R$ 50,00</p>
-                                </div>
-                                <button class="btn-icon-small" onclick="selectPixRecipient('Carlos Eduardo', '987.654.321-00', 'Outros')">
-                                    <span class="material-icons">arrow_forward</span>
-                                </button>
+                    <div class="pix-quick-keys">
+                        <h4>Chaves Salvas</h4>
+                        <div class="quick-key-item">
+                            <span class="material-icons">person</span>
+                            <div>
+                                <strong>Maria Silva</strong>
+                                <p>maria@email.com</p>
                             </div>
-                            <div class="pix-recent-item">
-                                <div class="pix-recent-icon">
-                                    <span class="material-icons">store</span>
-                                </div>
-                                <div class="pix-recent-info">
-                                    <strong>Supermercado Extra</strong>
-                                    <p>2 dias atrás • R$ 156,80</p>
-                                </div>
-                                <button class="btn-icon-small" onclick="selectPixRecipient('Supermercado Extra', 'extra@pix.com.br', 'Alimentação')">
-                                    <span class="material-icons">arrow_forward</span>
-                                </button>
+                        </div>
+                        <div class="quick-key-item">
+                            <span class="material-icons">person</span>
+                            <div>
+                                <strong>Pedro Santos</strong>
+                                <p>123.456.789-00</p>
                             </div>
                         </div>
                     </div>
+                    <button class="btn-primary" onclick="realizarTransferenciaPix()">
+                        <span class="material-icons">send</span>
+                        Transferir
+                    </button>
                 </div>
             </div>
         </div>
