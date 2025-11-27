@@ -85,10 +85,7 @@ function loadSavedUser() {
     }
 }
 
-// Carregar usuário salvo ao iniciar (depois que tudo estiver definido)
-setTimeout(() => {
-    loadSavedUser();
-}, 100);
+// NÃO carregar automaticamente - será chamado no DOMContentLoaded quando necessário
 
 // Se não tem usuário (primeira visita), inicializa tracking em modo visitante
 if (!currentUser && window.MoneyFlowTracker) {
@@ -376,9 +373,23 @@ const categoryData = {
 
 // Initialize
 document.addEventListener('DOMContentLoaded', () => {
+    // Verificar se tem usuário salvo
+    const savedUser = localStorage.getItem('moneyflow_user');
+    
     // Show splash screen
     setTimeout(() => {
-        showScreen('login-screen');
+        // Se tem usuário salvo E não é logout, vai direto pro dashboard
+        if (savedUser && !isLoggingOut) {
+            console.log('✅ Usuário logado, indo para dashboard');
+            loadSavedUser(); // Carregar dados do usuário
+            showScreen('dashboard-screen');
+            updateUserInterface();
+            updateBalanceDisplay();
+        } else {
+            // Senão, mostra tela de login
+            console.log('👤 Nenhum usuário logado, mostrando login');
+            showScreen('login-screen');
+        }
     }, 2000);
 
     // Set today's date for transaction form
