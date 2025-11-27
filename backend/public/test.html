@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MoneyFlow Tracking SDK - Test Page</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .container {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      max-width: 800px;
+      width: 100%;
+      padding: 40px;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .subtitle {
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    .section {
+      margin-bottom: 30px;
+    }
+
+    .section h2 {
+      color: #667eea;
+      font-size: 18px;
+      margin-bottom: 15px;
+      border-bottom: 2px solid #667eea;
+      padding-bottom: 5px;
+    }
+
+    .button-group {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 10px;
+      margin-bottom: 15px;
+    }
+
+    button {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 6px;
+      font-size: 14px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    button:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    button:active {
+      transform: translateY(0);
+    }
+
+    .info-box {
+      background: #f8f9fa;
+      border-left: 4px solid #667eea;
+      padding: 15px;
+      margin-bottom: 20px;
+      border-radius: 4px;
+    }
+
+    .info-box strong {
+      color: #667eea;
+    }
+
+    .log {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 15px;
+      border-radius: 6px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px;
+      max-height: 300px;
+      overflow-y: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+    }
+
+    .log-entry {
+      margin-bottom: 5px;
+      padding: 5px;
+      border-radius: 3px;
+    }
+
+    .log-entry.info {
+      color: #4ec9b0;
+    }
+
+    .log-entry.success {
+      color: #b5cea8;
+    }
+
+    .log-entry.error {
+      color: #f48771;
+    }
+
+    form {
+      display: grid;
+      gap: 10px;
+    }
+
+    input {
+      padding: 10px;
+      border: 2px solid #e0e0e0;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    .stat-card {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 20px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .stat-card .number {
+      font-size: 32px;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+
+    .stat-card .label {
+      font-size: 12px;
+      opacity: 0.9;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🚀 MoneyFlow Tracking SDK</h1>
+    <p class="subtitle">Test Page - Event Tracking System</p>
+
+    <div class="info-box">
+      <strong>Device ID:</strong> <span id="deviceId">Loading...</span><br>
+      <strong>Session ID:</strong> <span id="sessionId">Loading...</span><br>
+      <strong>User ID:</strong> <span id="userId">Not logged in</span>
+    </div>
+
+    <div class="section">
+      <h2>📊 Statistics</h2>
+      <div class="stats">
+        <div class="stat-card">
+          <div class="number" id="eventCount">0</div>
+          <div class="label">Events Tracked</div>
+        </div>
+        <div class="stat-card">
+          <div class="number" id="queueSize">0</div>
+          <div class="label">Queue Size</div>
+        </div>
+        <div class="stat-card">
+          <div class="number" id="sessionEvents">0</div>
+          <div class="label">Session Events</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🔐 Authentication</h2>
+      <form id="loginForm">
+        <input type="email" id="email" placeholder="Email" value="joao@exemplo.com" required>
+        <input type="password" id="password" placeholder="Senha" value="senha123" required>
+        <button type="submit">Login</button>
+      </form>
+      <button onclick="logout()" style="margin-top: 10px; background: #dc3545;">Logout</button>
+    </div>
+
+    <div class="section">
+      <h2>💰 Financial Events</h2>
+      <div class="button-group">
+        <button onclick="trackTransfer()">Transfer Initiated</button>
+        <button onclick="trackPayment()">Payment</button>
+        <button onclick="trackRecharge()">Recharge</button>
+        <button onclick="trackCashback()">Cashback Earned</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🎮 Gamification Events</h2>
+      <div class="button-group">
+        <button onclick="trackGoalCreated()">Goal Created</button>
+        <button onclick="trackGoalCompleted()">Goal Completed</button>
+        <button onclick="trackAchievement()">Achievement Unlocked</button>
+        <button onclick="trackBudgetExceeded()">Budget Exceeded</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>🧪 Test Events</h2>
+      <div class="button-group">
+        <button onclick="trackCustomEvent()">Custom Event</button>
+        <button onclick="triggerError()">Trigger Error</button>
+        <button onclick="flushQueue()">Flush Queue</button>
+        <button onclick="clearLog()">Clear Log</button>
+      </div>
+    </div>
+
+    <div class="section">
+      <h2>📝 Event Log</h2>
+      <div class="log" id="log"></div>
+    </div>
+  </div>
+
+  <!-- Load MoneyFlow SDK -->
+  <script src="moneyflow-tracking.js"></script>
+
+  <script>
+    // Stats
+    let eventCount = 0;
+    let sessionEvents = 0;
+
+    // Initialize SDK
+    MoneyFlow.initTracking({
+      apiUrl: 'http://localhost:3000/api/v1',
+      batchSize: 5,
+      batchTimeout: 3000,
+      debug: true,
+      enableAutoTracking: true,
+      enableOfflineQueue: true
+    });
+
+    // Update UI with IDs
+    document.getElementById('deviceId').textContent = localStorage.getItem('moneyflow_device_id') || 'N/A';
+    document.getElementById('sessionId').textContent = sessionStorage.getItem('moneyflow_session_id') || 'N/A';
+
+    // Login form
+    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      try {
+        const response = await fetch('http://localhost:3000/api/v1/auth/login', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ email, password })
+        });
+
+        const data = await response.json();
+
+        if (data.success) {
+          MoneyFlow.setUserId(data.user.id);
+          MoneyFlow.setAccessToken(data.tokens.accessToken);
+          document.getElementById('userId').textContent = data.user.email;
+          
+          // Track login event
+          MoneyFlow.track('login', {
+            method: 'email',
+            success: true
+          });
+
+          addLog('success', `✅ Login successful: ${data.user.email}`);
+        } else {
+          addLog('error', `❌ Login failed: ${data.error}`);
+        }
+      } catch (error) {
+        addLog('error', `❌ Login error: ${error.message}`);
+      }
+    });
+
+    // Logout
+    function logout() {
+      MoneyFlow.clearUser();
+      MoneyFlow.track('logout');
+      document.getElementById('userId').textContent = 'Not logged in';
+      document.getElementById('sessionId').textContent = sessionStorage.getItem('moneyflow_session_id');
+      addLog('info', '🚪 User logged out');
+    }
+
+    // Financial events
+    function trackTransfer() {
+      track('transfer_initiated', {
+        amount: 150.50,
+        currency: 'BRL',
+        to_account: '****1234',
+        transfer_type: 'pix'
+      });
+    }
+
+    function trackPayment() {
+      track('payment_completed', {
+        amount: 89.90,
+        method: 'credit_card',
+        merchant: 'Amazon',
+        category: 'shopping'
+      });
+    }
+
+    function trackRecharge() {
+      track('recharge_completed', {
+        type: 'mobile',
+        provider: 'Vivo',
+        amount: 30.00,
+        phone: '(11) 99999-9999'
+      });
+    }
+
+    function trackCashback() {
+      track('cashback_earned', {
+        amount: 5.50,
+        partner: 'iFood',
+        percentage: 5
+      });
+    }
+
+    // Gamification events
+    function trackGoalCreated() {
+      track('goal_created', {
+        title: 'Viagem para Europa',
+        target_amount: 10000.00,
+        deadline: '2025-12-31'
+      });
+    }
+
+    function trackGoalCompleted() {
+      track('goal_completed', {
+        title: 'Economia do mês',
+        achieved_amount: 1500.00,
+        days_taken: 30
+      });
+    }
+
+    function trackAchievement() {
+      track('achievement_unlocked', {
+        achievement_id: 'first_transfer',
+        name: 'Primeira Transferência',
+        points: 50
+      });
+    }
+
+    function trackBudgetExceeded() {
+      track('budget_exceeded', {
+        category: 'food',
+        budget: 500.00,
+        spent: 650.00,
+        percentage: 130
+      });
+    }
+
+    // Test events
+    function trackCustomEvent() {
+      track('custom_event', {
+        custom_data: 'test',
+        timestamp: Date.now(),
+        random: Math.random()
+      });
+    }
+
+    function triggerError() {
+      throw new Error('Test error triggered by user');
+    }
+
+    function flushQueue() {
+      MoneyFlow.flushQueue()
+        .then(() => addLog('success', '✅ Queue flushed successfully'))
+        .catch(err => addLog('error', `❌ Flush failed: ${err.message}`));
+    }
+
+    function clearLog() {
+      document.getElementById('log').innerHTML = '';
+    }
+
+    // Wrapper for track
+    function track(eventType, properties) {
+      MoneyFlow.track(eventType, properties);
+      eventCount++;
+      sessionEvents++;
+      updateStats();
+      addLog('info', `📤 Event: ${eventType}`);
+    }
+
+    // Update stats
+    function updateStats() {
+      document.getElementById('eventCount').textContent = eventCount;
+      document.getElementById('sessionEvents').textContent = sessionEvents;
+    }
+
+    // Add log entry
+    function addLog(type, message) {
+      const log = document.getElementById('log');
+      const entry = document.createElement('div');
+      entry.className = `log-entry ${type}`;
+      entry.textContent = `[${new Date().toLocaleTimeString()}] ${message}`;
+      log.appendChild(entry);
+      log.scrollTop = log.scrollHeight;
+    }
+
+    // Initial log
+    addLog('success', '🚀 MoneyFlow SDK initialized');
+    addLog('info', `📱 Device ID: ${localStorage.getItem('moneyflow_device_id')}`);
+    addLog('info', `🔐 Session ID: ${sessionStorage.getItem('moneyflow_session_id')}`);
+  </script>
+</body>
+</html>

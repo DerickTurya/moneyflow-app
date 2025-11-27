@@ -1,0 +1,19 @@
+# ⚠️ Use apenas o demo HTML
+
+O projeto MoneyFlow está **100% funcional** na pasta `demo/`.
+
+## Como usar:
+
+```
+Abra: demo/index.html no navegador
+```
+
+**Não use a pasta `backend/` - ela é apenas referência de documentação.**
+
+O demo HTML é standalone e não precisa de nada instalado!
+
+✅ Tudo funcionando
+✅ 16 telas completas  
+✅ Pronto para apresentar
+
+🚀 **Boa sorte no hackathon!**

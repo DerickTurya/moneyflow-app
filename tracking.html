@@ -1,0 +1,1071 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <link rel="icon" href="data:,">
+    <title>MoneyFlow Admin - Tracking Manual v2</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: white;
+            margin-bottom: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 20px 30px;
+            border-radius: 12px;
+        }
+
+        .header-left h1 {
+            font-size: 2rem;
+            margin-bottom: 5px;
+        }
+
+        .subtitle {
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+
+        .header-right {
+            text-align: right;
+        }
+
+        .admin-badge {
+            background: #ef4444;
+            color: white;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        .stats-quick {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        .main-grid {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .clients-sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .sidebar-header {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #1e293b;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .client-item {
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .client-item:hover {
+            background: #f1f5f9;
+            border-left-color: #667eea;
+        }
+
+        .client-item.active {
+            background: #e0e7ff;
+            border-left-color: #667eea;
+        }
+
+        .client-name {
+            font-weight: 600;
+            color: #1e293b;
+            margin-bottom: 4px;
+        }
+
+        .client-email {
+            font-size: 0.85rem;
+            color: #64748b;
+            margin-bottom: 4px;
+        }
+
+        .client-phone {
+            font-size: 0.8rem;
+            color: #94a3b8;
+        }
+
+        .client-events-count {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            margin-top: 4px;
+        }
+
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.4);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f0f0;
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .card-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #667eea;
+            margin: 10px 0;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: #10b981;
+            color: white;
+        }
+
+        .badge-info {
+            background: #3b82f6;
+            color: white;
+        }
+
+        .badge-warning {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .events-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        .events-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .events-header h2 {
+            color: #1e293b;
+        }
+
+        .client-info-banner {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .client-info-details {
+            display: flex;
+            gap: 30px;
+        }
+
+        .client-info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .client-info-label {
+            font-size: 0.75rem;
+            opacity: 0.8;
+            margin-bottom: 2px;
+        }
+
+        .client-info-value {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: #10b981;
+        }
+
+        .pulse {
+            width: 10px;
+            height: 10px;
+            background: #10b981;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+            50% {
+                opacity: 0.5;
+                transform: scale(1.2);
+            }
+        }
+
+        .event-list {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .event-item {
+            display: flex;
+            align-items: start;
+            gap: 15px;
+            padding: 15px;
+            border-left: 4px solid #667eea;
+            background: #f8fafc;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            position: relative;
+        }
+
+        .event-item.new {
+            background: #fef3c7;
+            border-left-color: #f59e0b;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInPulse {
+            0% {
+                opacity: 0;
+                transform: translateX(-20px) scale(0.95);
+            }
+            50% {
+                transform: translateX(0) scale(1.02);
+            }
+            100% {
+                opacity: 1;
+                transform: translateX(0) scale(1);
+            }
+        }
+
+        .event-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+        }
+
+        .event-icon.login { background: #dbeafe; }
+        .event-icon.page_view { background: #fef3c7; }
+        .event-icon.transfer_completed { background: #d1fae5; }
+        .event-icon.button_click { background: #e0e7ff; }
+
+        .event-details {
+            flex: 1;
+        }
+
+        .event-type {
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 5px;
+        }
+
+        .event-data {
+            font-size: 0.9rem;
+            color: #6b7280;
+        }
+
+        .event-time {
+            font-size: 0.85rem;
+            color: #9ca3af;
+            white-space: nowrap;
+        }
+
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .filter-label {
+            font-weight: 600;
+            color: #1e293b;
+            margin-right: 10px;
+        }
+
+        select {
+            padding: 8px 16px;
+            border: 2px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        select:hover {
+            border-color: #667eea;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        button {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+        }
+
+        .btn-refresh {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-refresh:hover {
+            background: #5568d3;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .status {
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .status.connected {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        .status.error {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+
+        .all-clients-view {
+            text-align: center;
+            padding: 40px;
+            color: #64748b;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #94a3b8;
+        }
+
+        .empty-state-icon {
+            font-size: 4rem;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 40px;
+            color: #6b7280;
+        }
+
+        .spinner {
+            border: 3px solid #f3f4f6;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-left">
+                <h1>🔒 MoneyFlow Security Tracking</h1>
+                <p class="subtitle">Monitoramento de Segurança e Atividades em Tempo Real</p>
+            </div>
+            <div class="header-right">
+                <div class="admin-badge">🛡️ SECURITY</div>
+                <div class="stats-quick">
+                    <span id="totalClientsHeader">0</span> usuários • 
+                    <span id="totalEventsHeader">0</span> atividades
+                </div>
+            </div>
+        </header>
+
+        <div id="status" class="status connected">
+            ✅ Conectado - Monitorando API em tempo real
+        </div>
+
+        <div class="main-grid">
+            <!-- Sidebar com lista de clientes -->
+            <div class="clients-sidebar">
+                <div class="sidebar-header">
+                    👥 Usuários Monitorados
+                </div>
+                <div id="clientsList">
+                    <div class="loading">
+                        <div class="spinner"></div>
+                        <p>Carregando clientes...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Conteúdo principal -->
+            <div class="main-content">
+                <!-- Dashboard com estatísticas -->
+                <div class="dashboard" id="dashboard">
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Total de Eventos</span>
+                            <span class="badge badge-info">Hoje</span>
+                        </div>
+                        <div class="card-value" id="totalEvents">0</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Pontos</span>
+                            <span class="badge badge-success">Acumulados</span>
+                        </div>
+                        <div class="card-value" id="totalPoints">0</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Nível</span>
+                            <span class="badge badge-warning">Atual</span>
+                        </div>
+                        <div class="card-value" id="userLevel">-</div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <span class="card-title">Sequência</span>
+                            <span class="badge badge-info">Dias</span>
+                        </div>
+                        <div class="card-value" id="streakDays">0</div>
+                    </div>
+                </div>
+
+                <!-- Container de eventos -->
+                <div class="events-container">
+                    <div id="clientInfoBanner" style="display: none;">
+                        <!-- Será preenchido dinamicamente -->
+                    </div>
+                    
+                    <div class="events-header">
+                        <h2 id="eventsTitle">🔍 Selecione um usuário</h2>
+                        <div class="live-indicator">
+                            <div class="pulse"></div>
+                            <span>Monitoramento Ativo</span>
+                        </div>
+                    </div>
+                    
+                    <div class="filters">
+                        <span class="filter-label">Filtrar:</span>
+                        <select id="eventTypeFilter">
+                            <option value="all">Todas as atividades</option>
+                            <option value="login">🔐 Login</option>
+                            <option value="page_view">📄 Navegação</option>
+                            <option value="transfer_completed">💰 Transferências</option>
+                            <option value="button_click">🔘 Interações</option>
+                            <option value="security_alert">⚠️ Alertas de Segurança</option>
+                        </select>
+                        <button class="btn-refresh" onclick="refreshData()">🔄 Atualizar</button>
+                    </div>
+                    
+                    <div id="eventsList" class="event-list">
+                        <div class="all-clients-view">
+                            <div class="empty-state-icon">👥</div>
+                            <p>Selecione um cliente na barra lateral para ver seus eventos</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:3000/api/v1';
+        const ADMIN_USER = {
+            email: 'joao@exemplo.com',
+            password: 'senha123'
+        };
+
+        let accessToken = null;
+        let allClients = [];
+        let selectedClient = null;
+        let previousEventIds = new Set();
+        let pollingInterval = null;
+        let lastClientsHash = '';
+        let lastEventsHash = '';
+        let isLoggingIn = false;
+        let lastLoginAttempt = 0;
+        let isLoadingClients = false;
+        let isLoadingEvents = false;
+
+        // Ícones para cada tipo de evento
+        const eventIcons = {
+            login: '🔐',
+            page_view: '📄',
+            transfer_completed: '💰',
+            button_click: '🔘',
+            default: '📌'
+        };
+
+        // Formata timestamp
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            const now = new Date();
+            const diff = Math.floor((now - date) / 1000);
+
+            if (diff < 60) return `há ${diff}s`;
+            if (diff < 3600) return `há ${Math.floor(diff / 60)}m`;
+            if (diff < 86400) return `há ${Math.floor(diff / 3600)}h`;
+            return date.toLocaleString('pt-BR', {
+                day: '2-digit',
+                month: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+        }
+
+        // Formata dados do evento
+        function formatEventData(eventType, data) {
+            if (!data) return '';
+            
+            const formatted = [];
+            if (data.page) formatted.push(`Página: ${data.page}`);
+            if (data.method) formatted.push(`Método: ${data.method}`);
+            if (data.button) formatted.push(`Botão: ${data.button}`);
+            if (data.amount) formatted.push(`Valor: R$ ${data.amount.toFixed(2)}`);
+            if (data.currency) formatted.push(`Moeda: ${data.currency}`);
+            
+            return formatted.join(' • ');
+        }
+
+        // Atualiza status
+        function updateStatus(type, message) {
+            const statusEl = document.getElementById('status');
+            statusEl.className = `status ${type}`;
+            statusEl.textContent = message;
+        }
+
+        // Faz login como admin
+        async function loginAsAdmin() {
+            // Previne múltiplos logins simultâneos
+            if (isLoggingIn) {
+                console.log('⚠️ Login já em andamento, aguardando...');
+                return false;
+            }
+            
+            // Previne logins muito frequentes (mínimo 2 segundos entre tentativas)
+            const now = Date.now();
+            if (now - lastLoginAttempt < 2000) {
+                console.log('⚠️ Login tentado muito rápido, ignorando...');
+                return false;
+            }
+            
+            lastLoginAttempt = now;
+            isLoggingIn = true;
+            try {
+                console.log('🔐 Fazendo login como admin...');
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(ADMIN_USER)
+                });
+
+                const result = await response.json();
+                console.log('🔑 Login result:', result);
+                
+                if (result.success) {
+                    accessToken = result.tokens.accessToken;
+                    console.log('✅ Token obtido:', accessToken.substring(0, 20) + '...');
+                    updateStatus('connected', '✅ Admin conectado - Monitorando em tempo real');
+                    isLoggingIn = false;
+                    return true;
+                }
+                
+                updateStatus('error', '❌ Erro ao fazer login como admin');
+                isLoggingIn = false;
+                return false;
+            } catch (error) {
+                console.error('❌ Erro no login:', error);
+                updateStatus('error', `❌ Erro: ${error.message}`);
+                isLoggingIn = false;
+                return false;
+            }
+        }
+
+        // Carrega todos os clientes do banco
+        async function loadAllClients() {
+            if (isLoadingClients) {
+                console.log('⚠️ Carregamento de clientes já em andamento');
+                return;
+            }
+            
+            isLoadingClients = true;
+            try {
+                console.log('🔍 Carregando clientes...');
+                const response = await fetch(`${API_URL}/analytics/admin/all-users`, {
+                    headers: { 'Authorization': `Bearer ${accessToken}` }
+                });
+
+                console.log('📡 Response status:', response.status);
+                const result = await response.json();
+                console.log('📦 Dados recebidos:', result);
+                
+                if (result.success && result.data) {
+                    allClients = result.data.map(user => ({
+                        id: user.id,
+                        name: user.full_name,
+                        email: user.email,
+                        phone: user.phone,
+                        points: user.points,
+                        level: user.level,
+                        streak_days: user.streak_days,
+                        total_events: parseInt(user.total_events),
+                        last_activity: user.last_activity
+                    }));
+
+                    console.log('✅ Clientes processados:', allClients.length);
+                    
+                    // Só renderiza se houver mudanças
+                    const newHash = JSON.stringify(allClients.map(c => c.id + c.total_events));
+                    if (newHash !== lastClientsHash) {
+                        lastClientsHash = newHash;
+                        renderClientsList();
+                    }
+                    
+                    updateGlobalStats();
+                }
+                
+            } catch (error) {
+                console.error('❌ Erro ao carregar clientes:', error);
+            } finally {
+                isLoadingClients = false;
+            }
+        }
+
+        // Renderiza lista de clientes
+        let lastRenderedHTML = '';
+        function renderClientsList() {
+            const listEl = document.getElementById('clientsList');
+            
+            if (allClients.length === 0) {
+                const emptyHTML = '<div class="empty-state"><p>Nenhum cliente encontrado</p></div>';
+                if (listEl.innerHTML !== emptyHTML) {
+                    listEl.innerHTML = emptyHTML;
+                }
+                return;
+            }
+
+            const newHTML = allClients.map(client => `
+                <div class="client-item ${selectedClient?.id === client.id ? 'active' : ''}" 
+                     onclick="selectClient('${client.id}')">
+                    <div class="client-name">${client.name}</div>
+                    <div class="client-email">📧 ${client.email}</div>
+                    <div class="client-phone">📱 ${client.phone || 'Sem telefone'}</div>
+                    <span class="client-events-count">${client.total_events || 0} eventos</span>
+                </div>
+            `).join('');
+            
+            // Só atualiza se realmente mudou
+            if (newHTML !== lastRenderedHTML) {
+                listEl.innerHTML = newHTML;
+                lastRenderedHTML = newHTML;
+            }
+        }
+
+        // Seleciona um cliente
+        async function selectClient(clientId) {
+            selectedClient = allClients.find(c => c.id === clientId);
+            if (!selectedClient) return;
+
+            // Reseta hash para forçar renderização na mudança de cliente
+            lastEventsHash = '';
+            renderClientsList();
+            await loadClientData(clientId);
+        }
+
+        // Carrega dados de um cliente específico
+        async function loadClientData(clientId) {
+            try {
+                // Carrega estatísticas do cliente usando endpoint admin
+                const statsResponse = await fetch(`${API_URL}/analytics/admin/user/${clientId}/stats`, {
+                    headers: { 'Authorization': `Bearer ${accessToken}` }
+                });
+
+                const statsResult = await statsResponse.json();
+                
+                if (statsResult.success && statsResult.data) {
+                    updateClientStats(statsResult.data);
+                }
+
+                // Carrega eventos do cliente
+                await loadClientEvents(clientId);
+                
+            } catch (error) {
+                console.error('Erro ao carregar dados do cliente:', error);
+            }
+        }
+
+        // Atualiza estatísticas do cliente selecionado
+        function updateClientStats(data) {
+            const { user, stats } = data;
+            
+            document.getElementById('totalPoints').textContent = user.points || 0;
+            document.getElementById('userLevel').textContent = user.level || 'Bronze';
+            document.getElementById('streakDays').textContent = user.streak_days || 0;
+            document.getElementById('totalEvents').textContent = stats.total_events || 0;
+
+            // Atualiza banner com info do cliente
+            const banner = document.getElementById('clientInfoBanner');
+            banner.style.display = 'block';
+            banner.innerHTML = `
+                <div class="client-info-details">
+                    <div class="client-info-item">
+                        <div class="client-info-label">👤 USUÁRIO</div>
+                        <div class="client-info-value">${user.name}</div>
+                    </div>
+                    <div class="client-info-item">
+                        <div class="client-info-label">📧 EMAIL</div>
+                        <div class="client-info-value">${user.email}</div>
+                    </div>
+                    <div class="client-info-item">
+                        <div class="client-info-label">📱 TELEFONE</div>
+                        <div class="client-info-value">${selectedClient.phone || 'Não informado'}</div>
+                    </div>
+                    <div class="client-info-item">
+                        <div class="client-info-label">🔑 ID</div>
+                        <div class="client-info-value" style="font-size: 0.75rem;">${user.id.substring(0, 12)}...</div>
+                    </div>
+                    <div class="client-info-item">
+                        <div class="client-info-label">📊 EVENTOS</div>
+                        <div class="client-info-value">${stats.total_events || 0}</div>
+                    </div>
+                    <div class="client-info-item">
+                        <div class="client-info-label">⏰ ÚLTIMA ATIVIDADE</div>
+                        <div class="client-info-value">${stats.last_login ? formatTime(stats.last_login) : 'Nunca'}</div>
+                    </div>
+                </div>
+            `;
+
+            // Atualiza título
+            document.getElementById('eventsTitle').textContent = `🔍 Atividades de ${user.name}`;
+        }
+
+        // Carrega eventos do cliente
+        async function loadClientEvents(clientId) {
+            if (isLoadingEvents) {
+                console.log('⚠️ Carregamento de eventos já em andamento');
+                return;
+            }
+            
+            isLoadingEvents = true;
+            try {
+                const eventTypeFilter = document.getElementById('eventTypeFilter').value;
+                let url = `${API_URL}/analytics/admin/user/${clientId}/events?limit=50`;
+                
+                if (eventTypeFilter !== 'all') {
+                    url += `&event_type=${eventTypeFilter}`;
+                }
+
+                const response = await fetch(url, {
+                    headers: { 
+                        'Authorization': `Bearer ${accessToken}`,
+                        'Cache-Control': 'no-cache, no-store, must-revalidate',
+                        'Pragma': 'no-cache'
+                    },
+                    cache: 'no-store'
+                });
+
+                // Se token expirou, relogar silenciosamente
+                if (response.status === 401) {
+                    isLoadingEvents = false; // Libera flag antes de tentar novamente
+                    const relogged = await loginAsAdmin();
+                    if (relogged) {
+                        return loadClientEvents(clientId); // Tentar novamente
+                    }
+                    return;
+                }
+
+                const result = await response.json();
+                
+                if (result.success && result.data) {
+                    console.log('📥 Recebidos', result.data.length, 'eventos do servidor');
+                    
+                    // Só renderiza se houver mudanças
+                    const newHash = JSON.stringify(result.data.map(e => e.id));
+                    const changed = newHash !== lastEventsHash;
+                    console.log('🔄 Hash mudou?', changed ? 'SIM - Atualizando!' : 'NÃO - Mesmo conteúdo');
+                    
+                    if (changed) {
+                        lastEventsHash = newHash;
+                        renderEvents(result.data);
+                    }
+                    
+                    // Atualiza contador de eventos do cliente (SEM forçar re-render da lista)
+                    const client = allClients.find(c => c.id === clientId);
+                    if (client && client.total_events !== result.pagination.total) {
+                        client.total_events = result.pagination.total;
+                        // Não força atualização - evita flickering
+                    }
+                }
+            } catch (error) {
+                // Erro silencioso - não perturbar o usuário
+                console.log('⚠️ Erro ao carregar eventos (será recarregado)');
+            } finally {
+                isLoadingEvents = false;
+            }
+        }
+
+        // Renderiza eventos
+        let lastEventsHTML = '';
+        function renderEvents(events) {
+            const listEl = document.getElementById('eventsList');
+            console.log('🎨 renderEvents chamado com', events.length, 'eventos');
+            
+            if (events.length === 0) {
+                console.log('⚠️ Nenhum evento para mostrar');
+                const emptyHTML = '<div class="empty-state"><div class="empty-state-icon">📭</div><p>Nenhum evento registrado para este cliente</p></div>';
+                if (listEl.innerHTML !== emptyHTML) {
+                    listEl.innerHTML = emptyHTML;
+                }
+                return;
+            }
+
+            // Identifica novos eventos
+            const currentEventIds = new Set(events.map(e => e.id));
+            const newEventIds = [...currentEventIds].filter(id => !previousEventIds.has(id));
+
+            const newHTML = events.map(event => {
+                const icon = eventIcons[event.event_type] || eventIcons.default;
+                const eventData = formatEventData(event.event_type, event.event_data);
+                const isNew = newEventIds.includes(event.id);
+                
+                return `
+                    <div class="event-item ${isNew ? 'new' : ''}">
+                        <div class="event-icon ${event.event_type}">
+                            ${icon}
+                        </div>
+                        <div class="event-details">
+                            <div class="event-type">${event.event_type.replace(/_/g, ' ').toUpperCase()}</div>
+                            ${eventData ? `<div class="event-data">${eventData}</div>` : ''}
+                        </div>
+                        <div class="event-time">${formatTime(event.created_at)}</div>
+                    </div>
+                `;
+            }).join('');
+            
+            // Só atualiza se realmente mudou
+            if (newHTML !== lastEventsHTML) {
+                listEl.innerHTML = newHTML;
+                lastEventsHTML = newHTML;
+            }
+
+            // Atualiza set de IDs anteriores
+            previousEventIds = currentEventIds;
+        }
+
+        // Atualiza estatísticas globais
+        function updateGlobalStats() {
+            const totalClients = allClients.length;
+            const totalEvents = allClients.reduce((sum, client) => sum + (client.total_events || 0), 0);
+            
+            document.getElementById('totalClientsHeader').textContent = totalClients;
+            document.getElementById('totalEventsHeader').textContent = totalEvents;
+        }
+
+        // Atualiza dados (chamado pelo botão de refresh e polling)
+        async function refreshData() {
+            try {
+                if (selectedClient) {
+                    await loadClientData(selectedClient.id);
+                }
+                await loadAllClients();
+            } catch (error) {
+                // Erro silencioso - evita console poluído
+                console.log('⚠️ Refresh silencioso (será retentado)');
+            }
+        }
+
+        // Inicia polling automático (5 segundos)
+        function startPolling() {
+            pollingInterval = setInterval(() => {
+                // Apenas atualiza eventos do cliente selecionado
+                if (selectedClient && !isLoadingEvents) {
+                    console.log('🔄 Atualizando eventos automaticamente...');
+                    loadClientEvents(selectedClient.id);
+                }
+            }, 5000); // 5 segundos
+            console.log('✅ Polling automático ativado (5s)');
+        }
+
+        // Para polling
+        function stopPolling() {
+            if (pollingInterval) {
+                clearInterval(pollingInterval);
+                pollingInterval = null;
+            }
+        }
+
+        // Evento de mudança no filtro
+        document.addEventListener('DOMContentLoaded', () => {
+            const filterEl = document.getElementById('eventTypeFilter');
+            if (filterEl) {
+                filterEl.addEventListener('change', () => {
+                    if (selectedClient) {
+                        loadClientEvents(selectedClient.id);
+                    }
+                });
+            }
+        });
+
+        // Inicialização
+        async function init() {
+            console.log('🚀 Inicializando tracking dashboard...');
+            console.log('📌 Versão: Auto Update v3 (15s)');
+            
+            const loggedIn = await loginAsAdmin();
+            
+            if (loggedIn) {
+                await loadAllClients();
+                startPolling();
+                console.log('✅ Dashboard inicializado com polling automático');
+            }
+        }
+
+        // Detecta reload inesperado
+        let initCount = 0;
+        window.addEventListener('load', () => {
+            initCount++;
+            console.log('🔄 Página carregada (contagem: ' + initCount + ')');
+            if (initCount > 1) {
+                console.error('⚠️ ALERTA: Página recarregou múltiplas vezes!');
+            }
+        });
+
+        // Cleanup ao sair
+        window.addEventListener('beforeunload', () => {
+            stopPolling();
+        });
+
+        // Inicia quando a página carregar
+        init();
+    </script>
+</body>
+</html>

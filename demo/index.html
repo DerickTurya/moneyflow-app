@@ -1,0 +1,2950 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>MoneyFlow - Hub Financeiro Inteligente</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Mobile Container -->
+    <div class="mobile-container">
+        <!-- Splash Screen -->
+        <div id="splash-screen" class="screen active">
+            <div class="splash-content">
+                <div class="logo-container">
+                    <div class="logo-icon">💰</div>
+                    <h1 class="app-name">MoneyFlow</h1>
+                    <p class="app-subtitle">Hub Financeiro Inteligente</p>
+                </div>
+                <div class="loader"></div>
+            </div>
+        </div>
+
+        <!-- Login Screen -->
+        <div id="login-screen" class="screen">
+            <div class="login-header">
+                <h1 class="title">MoneyFlow</h1>
+                <p class="subtitle">Entre na sua conta</p>
+            </div>
+            <div class="login-form">
+                <div class="input-group">
+                    <span class="material-icons">email</span>
+                    <input type="email" placeholder="Email" id="email-input">
+                </div>
+                <div class="input-group">
+                    <span class="material-icons">lock</span>
+                    <input type="password" placeholder="Senha" id="password-input">
+                    <span class="material-icons toggle-password">visibility_off</span>
+                </div>
+                <a href="#" class="forgot-password">Esqueceu a senha?</a>
+                <button class="btn-primary" onclick="login()">Entrar</button>
+                <div class="divider">
+                    <span>OU</span>
+                </div>
+                <button class="btn-secondary" onclick="showScreen('register-screen')">Criar nova conta</button>
+            </div>
+        </div>
+
+        <!-- Register Screen -->
+        <div id="register-screen" class="screen">
+            <div class="login-header">
+                <h1 class="title">Criar Conta</h1>
+                <p class="subtitle">Abra sua conta MoneyFlow</p>
+            </div>
+            <div class="login-form" style="max-height: 80vh; overflow-y: auto; padding-right: 8px;">
+                <!-- Dados Pessoais -->
+                <div style="margin-bottom: 24px;">
+                    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(--text);">
+                        <span class="material-icons" style="vertical-align: middle; font-size: 20px;">person</span>
+                        Dados Pessoais
+                    </h3>
+                    <div class="input-group">
+                        <span class="material-icons">badge</span>
+                        <input type="text" placeholder="Nome completo" id="register-name" required>
+                    </div>
+                    <div class="input-group">
+                        <span class="material-icons">credit_card</span>
+                        <input type="text" placeholder="CPF" id="register-cpf" maxlength="14" required>
+                        <small style="font-size: 11px; color: var(--gray); margin-top: 4px;">000.000.000-00</small>
+                    </div>
+                    <div class="input-group">
+                        <span class="material-icons">cake</span>
+                        <input type="date" placeholder="Data de Nascimento" id="register-birthdate" required>
+                    </div>
+                    <div class="input-group">
+                        <span class="material-icons">phone</span>
+                        <input type="tel" placeholder="Celular" id="register-phone" maxlength="15" required>
+                        <small style="font-size: 11px; color: var(--gray); margin-top: 4px;">(00) 00000-0000</small>
+                    </div>
+                </div>
+
+                <!-- Endereço -->
+                <div style="margin-bottom: 24px;">
+                    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(--text);">
+                        <span class="material-icons" style="vertical-align: middle; font-size: 20px;">home</span>
+                        Endereço
+                    </h3>
+                    <div class="input-group">
+                        <span class="material-icons">place</span>
+                        <input type="text" placeholder="CEP" id="register-cep" maxlength="9" required>
+                        <small style="font-size: 11px; color: var(--gray); margin-top: 4px;">00000-000</small>
+                    </div>
+                    <div class="input-group">
+                        <span class="material-icons">location_city</span>
+                        <input type="text" placeholder="Cidade" id="register-city" required>
+                    </div>
+                    <div class="input-group">
+                        <span class="material-icons">map</span>
+                        <input type="text" placeholder="Estado" id="register-state" maxlength="2" required>
+                        <small style="font-size: 11px; color: var(--gray); margin-top: 4px;">Ex: SP, RJ, MG</small>
+                    </div>
+                </div>
+
+                <!-- Dados de Acesso -->
+                <div style="margin-bottom: 24px;">
+                    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(--text);">
+                        <span class="material-icons" style="vertical-align: middle; font-size: 20px;">security</span>
+                        Dados de Acesso
+                    </h3>
+                    <div class="input-group">
+                        <span class="material-icons">email</span>
+                        <input type="email" placeholder="Email" id="register-email" required>
+                    </div>
+                    <div class="input-group">
+                        <span class="material-icons">lock</span>
+                        <input type="password" placeholder="Senha (mínimo 6 caracteres)" id="register-password" required>
+                        <span class="material-icons toggle-password">visibility_off</span>
+                    </div>
+                    <div class="input-group">
+                        <span class="material-icons">lock</span>
+                        <input type="password" placeholder="Confirmar senha" id="register-confirm" required>
+                        <span class="material-icons toggle-password">visibility_off</span>
+                    </div>
+                </div>
+
+                <!-- Renda Mensal (opcional) -->
+                <div style="margin-bottom: 24px;">
+                    <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(--text);">
+                        <span class="material-icons" style="vertical-align: middle; font-size: 20px;">attach_money</span>
+                        Informações Financeiras (Opcional)
+                    </h3>
+                    <div class="input-group">
+                        <span class="material-icons">payments</span>
+                        <input type="text" placeholder="Renda mensal estimada" id="register-income">
+                        <small style="font-size: 11px; color: var(--gray); margin-top: 4px;">R$ 0.000,00</small>
+                    </div>
+                    <div class="input-group">
+                        <span class="material-icons">work</span>
+                        <select id="register-occupation" style="border: none; background: transparent; color: var(--text); width: 100%; outline: none;">
+                            <option value="">Selecione sua ocupação</option>
+                            <option value="employed">Empregado(a)</option>
+                            <option value="self-employed">Autônomo(a)</option>
+                            <option value="entrepreneur">Empresário(a)</option>
+                            <option value="student">Estudante</option>
+                            <option value="retired">Aposentado(a)</option>
+                            <option value="other">Outro</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Termos -->
+                <div style="display: flex; align-items: flex-start; gap: 8px; margin: 16px 0; padding: 12px; background: var(--background); border-radius: 12px;">
+                    <input type="checkbox" id="terms-checkbox" style="width: 20px; height: 20px; margin-top: 2px; flex-shrink: 0;">
+                    <label for="terms-checkbox" style="font-size: 13px; color: var(--gray); line-height: 1.5;">
+                        Li e concordo com os <a href="#" style="color: var(--primary); text-decoration: underline;">Termos de Uso</a>, 
+                        <a href="#" style="color: var(--primary); text-decoration: underline;">Política de Privacidade</a> e 
+                        autorizo o compartilhamento dos meus dados conforme a LGPD.
+                    </label>
+                </div>
+
+                <button class="btn-primary" onclick="register()" style="margin-top: 16px;">
+                    <span class="material-icons" style="vertical-align: middle; margin-right: 8px;">check_circle</span>
+                    Criar Minha Conta
+                </button>
+                <div class="divider">
+                    <span>JÁ TEM CONTA?</span>
+                </div>
+                <button class="btn-secondary" onclick="showScreen('login-screen')">
+                    <span class="material-icons" style="vertical-align: middle; margin-right: 8px;">login</span>
+                    Fazer Login
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard Screen -->
+        <div id="dashboard-screen" class="screen">
+            <div class="header">
+                <div class="header-left">
+                    <h2 class="greeting">Olá, João! 👋</h2>
+                    <p class="header-subtitle">Bem-vindo ao MoneyFlow</p>
+                </div>
+                <button class="icon-button" onclick="showScreen('notifications-screen')">
+                    <span class="material-icons">notifications</span>
+                    <span class="badge">3</span>
+                </button>
+            </div>
+
+            <div class="content">
+                <!-- Balance Card -->
+                <div class="balance-card gradient-purple">
+                    <p class="balance-label">Saldo Total</p>
+                    <h1 class="balance-amount" id="balance-total">R$ 2.450,80</h1>
+                    <div class="balance-row">
+                        <div>
+                            <p class="balance-sublabel">Receitas</p>
+                            <p class="balance-subamount" id="balance-income">R$ 4.500,00</p>
+                        </div>
+                        <div>
+                            <p class="balance-sublabel">Despesas</p>
+                            <p class="balance-subamount" id="balance-expenses">R$ 2.049,20</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Virtual Banner -->
+                <div class="card-banner" onclick="showScreen('create-card-screen')" style="background: linear-gradient(135deg, #00b894 0%, #00856f 100%); border-radius: 16px; padding: 20px; margin-bottom: 24px; cursor: pointer; display: flex; align-items: center; gap: 16px; box-shadow: 0 4px 12px rgba(0, 184, 148, 0.3); transition: transform 0.2s ease;">
+                    <div style="width: 56px; height: 56px; background: rgba(0,0,0,0.2); border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <span class="material-icons" style="color: white; font-size: 32px;">credit_card</span>
+                    </div>
+                    <div style="flex: 1;">
+                        <h3 style="margin: 0 0 4px 0; color: white; font-size: 18px; font-weight: 700;">Crie seu Cartão Virtual</h3>
+                        <p style="margin: 0; color: rgba(255,255,255,0.9); font-size: 14px;">Instantâneo e gratuito, use imediatamente</p>
+                    </div>
+                    <span class="material-icons" style="color: white;">arrow_forward</span>
+                </div>
+
+                <!-- Quick Actions -->
+                <div class="quick-actions">
+                    <button class="action-btn" onclick="showScreen('transfers-screen')">
+                        <span class="material-icons">sync_alt</span>
+                        <span>Transferências</span>
+                    </button>
+                    <button class="action-btn" onclick="showScreen('cashback-screen')">
+                        <span class="material-icons">local_offer</span>
+                        <span>Cashback</span>
+                    </button>
+                    <button class="action-btn" onclick="showScreen('payments-screen')">
+                        <span class="material-icons">receipt</span>
+                        <span>Pagamentos</span>
+                    </button>
+                    <button class="action-btn" onclick="showScreen('ai-assistant-screen')">
+                        <span class="material-icons">chat</span>
+                        <span>Assistente</span>
+                    </button>
+                </div>
+
+                <!-- Chart Section -->
+                <div class="section">
+                    <h3 class="section-title">Gastos por Categoria</h3>
+                    <div class="chart-container">
+                        <canvas id="pieChart"></canvas>
+                    </div>
+                    <div class="chart-legend" id="chart-legend">
+                        <!-- Legend will be populated dynamically -->
+                    </div>
+                </div>
+
+                <!-- Recent Transactions -->
+                <div class="section">
+                    <div class="section-header">
+                        <h3 class="section-title">Transações Recentes</h3>
+                        <a href="#" class="see-all" onclick="showScreen('transactions-screen')">Ver todas</a>
+                    </div>
+                    <div id="transactions-list" class="transactions-list">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <!-- AI Insights -->
+                <div class="insight-card">
+                    <div class="insight-header">
+                        <span class="material-icons" style="color: #f39c12;">lightbulb</span>
+                        <h4>Insights da IA</h4>
+                    </div>
+                    <p class="insight-text">💡 Você está gastando 15% a mais em alimentação este mês. Que tal economizar R$ 200?</p>
+                    <button class="insight-btn" onclick="showScreen('ai-assistant-screen')">Ver Dicas</button>
+                </div>
+
+                <!-- Services Quick Access -->
+                <div class="section">
+                    <h3 class="section-title">Serviços Financeiros</h3>
+                    <div class="services-grid">
+                        <div class="service-card" onclick="showScreen('recharge-screen')">
+                            <span class="material-icons">phone_android</span>
+                            <h4>Recargas</h4>
+                            <p>Celular, transporte e mais</p>
+                        </div>
+                        <div class="service-card" onclick="showScreen('budgets-screen')">
+                            <span class="material-icons">account_balance_wallet</span>
+                            <h4>Orçamentos</h4>
+                            <p>Controle seus gastos</p>
+                        </div>
+                        <div class="service-card" onclick="showScreen('insurance-screen')">
+                            <span class="material-icons">health_and_safety</span>
+                            <h4>Seguros</h4>
+                            <p>Proteção para você</p>
+                        </div>
+                        <div class="service-card" onclick="showScreen('loans-screen')">
+                            <span class="material-icons">attach_money</span>
+                            <h4>Empréstimos</h4>
+                            <p>Crédito personalizado</p>
+                        </div>
+                        <div class="service-card" onclick="showScreen('reports-screen')">
+                            <span class="material-icons">assessment</span>
+                            <h4>Relatórios</h4>
+                            <p>Análises detalhadas</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bottom Navigation -->
+            <nav class="bottom-nav">
+                <button class="nav-item active" onclick="showScreen('dashboard-screen')">
+                    <span class="material-icons">dashboard</span>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-item" onclick="showScreen('transactions-screen')">
+                    <span class="material-icons">list</span>
+                    <span>Transações</span>
+                </button>
+                <button class="nav-item fab-nav" onclick="scrollToTop()">
+                </button>
+                <button class="nav-item" onclick="showScreen('gamification-screen')">
+                    <span class="material-icons">emoji_events</span>
+                    <span>Pontuação</span>
+                </button>
+                <button class="nav-item" onclick="showScreen('profile-screen')">
+                    <span class="material-icons">person</span>
+                    <span>Perfil</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Create Card Screen -->
+        <div id="create-card-screen" class="screen">
+            <div class="screen-header">
+                <button class="icon-button" onclick="showScreen('dashboard-screen')">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <h2>Criar Cartão Virtual</h2>
+                <div></div>
+            </div>
+            <div class="content">
+                <!-- Card Preview -->
+                <div class="section">
+                    <div id="virtual-card-preview" class="virtual-card-preview" style="background: linear-gradient(135deg, #00b894 0%, #00856f 100%);">
+                        <div class="card-chip"></div>
+                        <div class="card-number" id="preview-card-number">•••• •••• •••• ••••</div>
+                        <div class="card-info">
+                            <div class="card-holder">
+                                <span class="card-label">Nome</span>
+                                <span id="preview-card-holder">JOAO SILVA</span>
+                            </div>
+                            <div class="card-expiry">
+                                <span class="card-label">Validade</span>
+                                <span id="preview-card-expiry">••/••</span>
+                            </div>
+                            <div class="card-cvv">
+                                <span class="card-label">CVV</span>
+                                <span id="preview-card-cvv">•••</span>
+                            </div>
+                        </div>
+                        <div class="card-brand">MoneyFlow</div>
+                    </div>
+                </div>
+
+                <!-- Card Type Selection -->
+                <div class="section">
+                    <h3 class="section-title">Escolha o Tipo de Cartão</h3>
+                    <div class="card-type-grid">
+                        <div class="card-type-option selected" onclick="selectCardType('virtual')">
+                            <div class="card-type-icon" style="background: linear-gradient(135deg, #00b894, #00856f);">
+                                <span class="material-icons">credit_card</span>
+                            </div>
+                            <div>
+                                <strong>Virtual</strong>
+                                <p>Instantâneo e gratuito</p>
+                            </div>
+                            <span class="material-icons check-icon" style="color: #00b894;">check_circle</span>
+                        </div>
+                        <div class="card-type-option" onclick="selectCardType('physical')">
+                            <div class="card-type-icon" style="background: linear-gradient(135deg, #00b894, #00856f);">
+                                <span class="material-icons">credit_card</span>
+                            </div>
+                            <div>
+                                <strong>Físico</strong>
+                                <p>Receba em 7 dias</p>
+                            </div>
+                            <span class="material-icons check-icon" style="color: #00b894;">check_circle</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Card Features -->
+                <div class="section">
+                    <h3 class="section-title">Benefícios do Cartão</h3>
+                    <div class="card">
+                        <div class="feature-list">
+                            <div class="feature-item">
+                                <span class="material-icons" style="color: #00b894;">check_circle</span>
+                                <span>Sem anuidade</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="material-icons" style="color: #00b894;">check_circle</span>
+                                <span>Cashback de até 5% em compras</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="material-icons" style="color: #00b894;">check_circle</span>
+                                <span>Aceito em todo o mundo</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="material-icons" style="color: #00b894;">check_circle</span>
+                                <span>Controle total pelo app</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="material-icons" style="color: #00b894;">check_circle</span>
+                                <span>Bloqueio e desbloqueio instantâneo</span>
+                            </div>
+                            <div class="feature-item">
+                                <span class="material-icons" style="color: #00b894;">check_circle</span>
+                                <span>Notificações em tempo real</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Button -->
+                <button class="btn-primary" onclick="createVirtualCard()" style="margin-top: 24px; background: linear-gradient(135deg, #00b894, #00856f);">
+                    <span class="material-icons" style="vertical-align: middle; margin-right: 8px;">add_card</span>
+                    Criar Cartão Agora
+                </button>
+            </div>
+        </div>
+
+        <!-- Profile Screen -->
+        <div id="profile-screen" class="screen">
+            <div class="screen-header">
+                <button class="icon-button" onclick="showScreen('dashboard-screen')">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <h2>Perfil</h2>
+                <button class="icon-button">
+                    <span class="material-icons">settings</span>
+                </button>
+            </div>
+            <div class="content">
+                <!-- Profile Header -->
+                <div class="profile-header">
+                    <div class="profile-avatar">😊</div>
+                    <h2>João Silva</h2>
+                    <p class="profile-email">joao.silva@email.com</p>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="material-icons">emoji_events</span>
+                        <h3>2.450</h3>
+                        <p>Pontos</p>
+                    </div>
+                    <div class="stat-card">
+                        <span class="material-icons">local_fire_department</span>
+                        <h3>12 dias</h3>
+                        <p>Sequência</p>
+                    </div>
+                    <div class="stat-card">
+                        <span class="material-icons">stars</span>
+                        <h3>Prata</h3>
+                        <p>Nível</p>
+                    </div>
+                </div>
+
+                <!-- Menu Options -->
+                <div class="section">
+                    <h3 class="section-title">Conta</h3>
+                    <div class="menu-list">
+                        <div class="menu-item" onclick="showScreen('personal-data-screen')">
+                            <span class="material-icons">person</span>
+                            <span>Dados Pessoais</span>
+                            <span class="material-icons">chevron_right</span>
+                        </div>
+                        <div class="menu-item" onclick="showScreen('security-screen')">
+                            <span class="material-icons">security</span>
+                            <span>Segurança</span>
+                            <span class="material-icons">chevron_right</span>
+                        </div>
+                        <div class="menu-item" onclick="showScreen('bank-accounts-screen')">
+                            <span class="material-icons">credit_card</span>
+                            <span>Contas Bancárias</span>
+                            <span class="material-icons">chevron_right</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Configurações</h3>
+                    <div class="menu-list">
+                        <div class="menu-item" onclick="showScreen('personalization-screen')">
+                            <span class="material-icons">auto_awesome</span>
+                            <span>Personalização IA</span>
+                            <span class="material-icons">chevron_right</span>
+                        </div>
+                        <div class="menu-item" onclick="showScreen('notifications-screen')">
+                            <span class="material-icons">notifications</span>
+                            <span>Notificações</span>
+                            <span class="material-icons">chevron_right</span>
+                        </div>
+                        <div class="menu-item" onclick="showScreen('appearance-screen')">
+                            <span class="material-icons">palette</span>
+                            <span>Aparência</span>
+                            <span class="material-icons">chevron_right</span>
+                        </div>
+                        <div class="menu-item" onclick="showScreen('language-screen')">
+                            <span class="material-icons">language</span>
+                            <span>Idioma</span>
+                            <span class="material-icons">chevron_right</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Acessibilidade</h3>
+                    <div class="menu-list">
+                        <div class="menu-item" onclick="showScreen('accessibility-screen')">
+                            <span class="material-icons">accessibility</span>
+                            <span>Centro de Acessibilidade</span>
+                            <span class="material-icons">chevron_right</span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="material-icons">text_fields</span>
+                            <span>Tamanho da Fonte</span>
+                            <span class="toggle-badge">Grande</span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="material-icons">contrast</span>
+                            <span>Alto Contraste</span>
+                            <span class="toggle-badge">Ativo</span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="material-icons">record_voice_over</span>
+                            <span>Leitor de Tela</span>
+                            <span class="toggle-badge">Ativo</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Suporte</h3>
+                    <div class="menu-list">
+                        <div class="menu-item">
+                            <span class="material-icons">help</span>
+                            <span>Central de Ajuda</span>
+                            <span class="material-icons">chevron_right</span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="material-icons">description</span>
+                            <span>Termos de Uso</span>
+                            <span class="material-icons">chevron_right</span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="material-icons">policy</span>
+                            <span>Política de Privacidade</span>
+                            <span class="material-icons">chevron_right</span>
+                        </div>
+                    </div>
+                </div>
+
+                <button class="btn-logout">
+                    <span class="material-icons">logout</span>
+                    Sair da Conta
+                </button>
+            </div>
+
+            <!-- Bottom Navigation -->
+            <nav class="bottom-nav">
+                <button class="nav-item" onclick="showScreen('dashboard-screen')">
+                    <span class="material-icons">dashboard</span>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-item" onclick="showScreen('transactions-screen')">
+                    <span class="material-icons">list</span>
+                    <span>Transações</span>
+                </button>
+                <button class="nav-item fab-nav" onclick="scrollToTop()">
+                </button>
+                <button class="nav-item" onclick="showScreen('gamification-screen')">
+                    <span class="material-icons">emoji_events</span>
+                    <span>Pontuação</span>
+                </button>
+                <button class="nav-item active">
+                    <span class="material-icons">person</span>
+                    <span>Perfil</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Personal Data Screen -->
+        <div id="personal-data-screen" class="screen">
+            <div class="screen-header">
+                <button class="icon-button" onclick="showScreen('profile-screen')">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <h2>Dados Pessoais</h2>
+                <div></div>
+            </div>
+            <div class="content">
+                <div class="section">
+                    <h3 class="section-title">Informações Básicas</h3>
+                    <div class="info-card">
+                        <div class="info-item">
+                            <span class="material-icons">person</span>
+                            <div>
+                                <p class="info-label">Nome Completo</p>
+                                <p class="info-value" id="display-name">João Silva</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <span class="material-icons">credit_card</span>
+                            <div>
+                                <p class="info-label">CPF</p>
+                                <p class="info-value" id="display-cpf">123.456.789-00</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <span class="material-icons">cake</span>
+                            <div>
+                                <p class="info-label">Data de Nascimento</p>
+                                <p class="info-value" id="display-birthdate">15/03/1990</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <span class="material-icons">phone</span>
+                            <div>
+                                <p class="info-label">Telefone</p>
+                                <p class="info-value" id="display-phone">(11) 98765-4321</p>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <span class="material-icons">email</span>
+                            <div>
+                                <p class="info-label">Email</p>
+                                <p class="info-value" id="display-email">joao@exemplo.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Endereço</h3>
+                    <div class="info-card">
+                        <div class="info-item">
+                            <span class="material-icons">home</span>
+                            <div>
+                                <p class="info-label">Endereço Completo</p>
+                                <p class="info-value" id="display-address">Rua Exemplo, 123 - Centro<br>São Paulo, SP - 01234-567</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Informações Financeiras</h3>
+                    <div class="info-card">
+                        <div class="info-item">
+                            <span class="material-icons">payments</span>
+                            <div>
+                                <p class="info-label">Renda Mensal</p>
+                                <p class="info-value" id="display-income">R$ 4.500,00</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Security Screen -->
+        <div id="security-screen" class="screen">
+            <div class="screen-header">
+                <button class="icon-button" onclick="showScreen('profile-screen')">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <h2>Segurança</h2>
+                <div></div>
+            </div>
+            <div class="content">
+                <div class="section">
+                    <h3 class="section-title">Autenticação</h3>
+                    <div class="menu-list">
+                        <div class="menu-item">
+                            <span class="material-icons">lock</span>
+                            <div style="flex: 1;">
+                                <span>Alterar Senha</span>
+                                <small style="display: block; color: var(--gray); font-size: 12px;">Última alteração há 30 dias</small>
+                            </div>
+                            <span class="material-icons">chevron_right</span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="material-icons">fingerprint</span>
+                            <div style="flex: 1;">
+                                <span>Biometria</span>
+                                <small style="display: block; color: var(--gray); font-size: 12px;">Touch ID / Face ID</small>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="menu-item">
+                            <span class="material-icons">verified_user</span>
+                            <div style="flex: 1;">
+                                <span>Autenticação em Dois Fatores</span>
+                                <small style="display: block; color: var(--gray); font-size: 12px;">Código SMS ou App</small>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Privacidade</h3>
+                    <div class="menu-list">
+                        <div class="menu-item">
+                            <span class="material-icons">visibility_off</span>
+                            <div style="flex: 1;">
+                                <span>Ocultar Saldo</span>
+                                <small style="display: block; color: var(--gray); font-size: 12px;">Esconder valores na tela inicial</small>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="menu-item">
+                            <span class="material-icons">history</span>
+                            <div style="flex: 1;">
+                                <span>Sessões Ativas</span>
+                                <small style="display: block; color: var(--gray); font-size: 12px;">1 dispositivo conectado</small>
+                            </div>
+                            <span class="material-icons">chevron_right</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Segurança Avançada</h3>
+                    <div class="info-card" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 20px; border-radius: 16px;">
+                        <div style="display: flex; align-items: center; gap: 16px;">
+                            <span class="material-icons" style="font-size: 48px;">shield</span>
+                            <div>
+                                <h4 style="margin: 0 0 8px 0; font-size: 16px;">Conta Protegida</h4>
+                                <p style="margin: 0; font-size: 13px; opacity: 0.9;">Todas as medidas de segurança estão ativas</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Bank Accounts Screen -->
+        <div id="bank-accounts-screen" class="screen">
+            <div class="screen-header">
+                <button class="icon-button" onclick="showScreen('profile-screen')">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <h2>Contas Bancárias</h2>
+                <button class="icon-button" onclick="alert('Adicionar nova conta')">
+                    <span class="material-icons">add</span>
+                </button>
+            </div>
+            <div class="content">
+                <div class="section">
+                    <h3 class="section-title">Contas Vinculadas</h3>
+                    
+                    <div class="info-card" style="margin-bottom: 16px;">
+                        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+                            <div style="width: 48px; height: 48px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                <span class="material-icons" style="color: white; font-size: 28px;">account_balance</span>
+                            </div>
+                            <div style="flex: 1;">
+                                <h4 style="margin: 0 0 4px 0; font-size: 16px; font-weight: 600;">MoneyFlow Digital</h4>
+                                <p style="margin: 0; color: var(--gray); font-size: 13px;">Conta Principal</p>
+                            </div>
+                            <span class="material-icons" style="color: #10b981;">check_circle</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-top: 12px; border-top: 1px solid var(--border);">
+                            <div>
+                                <p style="margin: 0; color: var(--gray); font-size: 12px;">Agência</p>
+                                <p style="margin: 4px 0 0 0; font-weight: 500;">0001</p>
+                            </div>
+                            <div>
+                                <p style="margin: 0; color: var(--gray); font-size: 12px;">Conta</p>
+                                <p style="margin: 4px 0 0 0; font-weight: 500;">123456-7</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="info-card">
+                        <div style="display: flex; align-items: center; gap: 16px; margin-bottom: 16px;">
+                            <div style="width: 48px; height: 48px; background: #f59e0b; border-radius: 12px; display: flex; align-items: center; justify-content: center;">
+                                <span class="material-icons" style="color: white; font-size: 28px;">account_balance</span>
+                            </div>
+                            <div style="flex: 1;">
+                                <h4 style="margin: 0 0 4px 0; font-size: 16px; font-weight: 600;">Banco Exemplo S.A.</h4>
+                                <p style="margin: 0; color: var(--gray); font-size: 13px;">Conta Corrente</p>
+                            </div>
+                            <span class="material-icons" style="color: #10b981;">check_circle</span>
+                        </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; padding-top: 12px; border-top: 1px solid var(--border);">
+                            <div>
+                                <p style="margin: 0; color: var(--gray); font-size: 12px;">Agência</p>
+                                <p style="margin: 4px 0 0 0; font-weight: 500;">4321</p>
+                            </div>
+                            <div>
+                                <p style="margin: 0; color: var(--gray); font-size: 12px;">Conta</p>
+                                <p style="margin: 4px 0 0 0; font-weight: 500;">987654-0</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <button class="btn-primary" style="width: 100%;" onclick="alert('Funcionalidade de adicionar conta em breve!')">
+                        <span class="material-icons">add</span>
+                        Adicionar Nova Conta
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Personalization Screen -->
+        <div id="personalization-screen" class="screen">
+            <div class="screen-header">
+                <button class="icon-button" onclick="showScreen('profile-screen')">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <h2>Personalização IA</h2>
+                <button class="icon-button" onclick="refreshPersonalization()">
+                    <span class="material-icons">refresh</span>
+                </button>
+            </div>
+            <div class="content">
+                <!-- Perfil Financeiro -->
+                <div class="section">
+                    <div class="personalization-header">
+                        <span class="material-icons personalization-icon">psychology</span>
+                        <div>
+                            <h3>Seu Perfil Financeiro</h3>
+                            <p class="personalization-subtitle">Baseado em 12 transações analisadas</p>
+                        </div>
+                    </div>
+                    
+                    <div class="profile-analysis-card">
+                        <div class="profile-type">
+                            <div class="profile-badge">
+                                <span class="material-icons">trending_up</span>
+                            </div>
+                            <div>
+                                <h4 id="user-profile-type">Poupador Consciente</h4>
+                                <p id="user-profile-description">Você mantém controle sobre seus gastos e busca economia</p>
+                            </div>
+                        </div>
+                        
+                        <div class="profile-metrics">
+                            <div class="metric-item">
+                                <span class="metric-label">Taxa de Economia</span>
+                                <div class="metric-bar">
+                                    <div class="metric-fill" id="savings-rate" style="width: 65%"></div>
+                                </div>
+                                <span class="metric-value" id="savings-rate-value">65%</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Consistência de Gastos</span>
+                                <div class="metric-bar">
+                                    <div class="metric-fill success" id="consistency-rate" style="width: 78%"></div>
+                                </div>
+                                <span class="metric-value" id="consistency-rate-value">78%</span>
+                            </div>
+                            <div class="metric-item">
+                                <span class="metric-label">Controle de Impulso</span>
+                                <div class="metric-bar">
+                                    <div class="metric-fill warning" id="impulse-control" style="width: 45%"></div>
+                                </div>
+                                <span class="metric-value" id="impulse-control-value">45%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recomendações Personalizadas -->
+                <div class="section">
+                    <h3 class="section-title">
+                        <span class="material-icons">lightbulb</span>
+                        Recomendações para Você
+                    </h3>
+                    <div class="recommendations-list" id="recommendations-list">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Insights Inteligentes -->
+                <div class="section">
+                    <h3 class="section-title">
+                        <span class="material-icons">insights</span>
+                        Insights Inteligentes
+                    </h3>
+                    <div class="insights-grid" id="insights-grid">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Metas Sugeridas -->
+                <div class="section">
+                    <h3 class="section-title">
+                        <span class="material-icons">flag</span>
+                        Metas Sugeridas
+                    </h3>
+                    <div class="goals-list" id="suggested-goals">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Padrões Detectados -->
+                <div class="section">
+                    <h3 class="section-title">
+                        <span class="material-icons">pattern</span>
+                        Padrões Detectados
+                    </h3>
+                    <div class="patterns-grid" id="patterns-grid">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Produtos Recomendados -->
+                <div class="section">
+                    <h3 class="section-title">
+                        <span class="material-icons">shopping_bag</span>
+                        Produtos Recomendados
+                    </h3>
+                    <div class="products-carousel" id="recommended-products">
+                        <!-- Populated by JavaScript -->
+                    </div>
+                </div>
+
+                <!-- Configurações de Personalização -->
+                <div class="section">
+                    <h3 class="section-title">Configurações</h3>
+                    <div class="card">
+                        <div class="personalization-setting">
+                            <div>
+                                <strong>Aprendizado Contínuo</strong>
+                                <p>Permitir que a IA aprenda com seus hábitos</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="learning-enabled" checked onchange="toggleLearning()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="personalization-setting">
+                            <div>
+                                <strong>Notificações Inteligentes</strong>
+                                <p>Receber alertas personalizados baseados em comportamento</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="smart-notifications" checked onchange="toggleSmartNotifications()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="personalization-setting">
+                            <div>
+                                <strong>Recomendações Proativas</strong>
+                                <p>Sugestões automáticas de economia e investimentos</p>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" id="proactive-recommendations" checked onchange="toggleProactive()">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estatísticas do Modelo -->
+                <div class="section">
+                    <div class="model-stats-card">
+                        <h4>Precisão do Modelo de Personalização</h4>
+                        <div class="accuracy-display">
+                            <div class="accuracy-circle">
+                                <svg width="120" height="120">
+                                    <circle cx="60" cy="60" r="50" fill="none" stroke="#e0e0e0" stroke-width="10"/>
+                                    <circle cx="60" cy="60" r="50" fill="none" stroke="var(--primary)" stroke-width="10" 
+                                            stroke-dasharray="314" stroke-dashoffset="63" transform="rotate(-90 60 60)"/>
+                                </svg>
+                                <div class="accuracy-text">
+                                    <span class="accuracy-number">92%</span>
+                                    <span class="accuracy-label">Precisão</span>
+                                </div>
+                            </div>
+                            <div class="model-metrics">
+                                <div class="model-metric">
+                                    <span class="material-icons">speed</span>
+                                    <div>
+                                        <strong>Tempo de Resposta</strong>
+                                        <span>< 100ms</span>
+                                    </div>
+                                </div>
+                                <div class="model-metric">
+                                    <span class="material-icons">storage</span>
+                                    <div>
+                                        <strong>Dados Analisados</strong>
+                                        <span>12 transações</span>
+                                    </div>
+                                </div>
+                                <div class="model-metric">
+                                    <span class="material-icons">update</span>
+                                    <div>
+                                        <strong>Última Atualização</strong>
+                                        <span>Há 2 minutos</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Transaction Screen -->
+        <div id="add-transaction-screen" class="screen">
+            <div class="screen-header">
+                <button class="icon-button" onclick="showScreen('dashboard-screen')">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <h2>Adicionar Transação</h2>
+                <div></div>
+            </div>
+            <div class="content">
+                <div class="form-container">
+                    <div class="input-group">
+                        <label>Descrição</label>
+                        <input type="text" id="transaction-description" placeholder="Ex: Supermercado Extra">
+                    </div>
+                    <div class="input-group">
+                        <label>Valor</label>
+                        <input type="number" id="transaction-amount" placeholder="0,00" step="0.01">
+                    </div>
+                    <div class="input-group">
+                        <label>Tipo</label>
+                        <select id="transaction-type">
+                            <option value="expense">Despesa</option>
+                            <option value="income">Receita</option>
+                            <option value="transfer">Transferência</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Categoria (IA irá sugerir)</label>
+                        <select id="transaction-category">
+                            <option value="">Automático (IA)</option>
+                            <option value="food">Alimentação</option>
+                            <option value="transport">Transporte</option>
+                            <option value="housing">Moradia</option>
+                            <option value="health">Saúde</option>
+                            <option value="education">Educação</option>
+                            <option value="leisure">Lazer</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>Data</label>
+                        <input type="date" id="transaction-date">
+                    </div>
+                    <button class="btn-primary" onclick="addTransaction()">
+                        <span class="material-icons">check</span>
+                        Adicionar Transação
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transactions Screen -->
+        <div id="transactions-screen" class="screen">
+            <div class="screen-header">
+                <button class="icon-button" onclick="showScreen('dashboard-screen')">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <h2>Transações</h2>
+                <button class="icon-button">
+                    <span class="material-icons">filter_list</span>
+                </button>
+            </div>
+            <div class="content">
+                <div class="search-bar">
+                    <span class="material-icons">search</span>
+                    <input type="text" placeholder="Buscar transações...">
+                </div>
+                <div class="filter-chips">
+                    <button class="chip active">Todas</button>
+                    <button class="chip">Receitas</button>
+                    <button class="chip">Despesas</button>
+                    <button class="chip">Este mês</button>
+                </div>
+                <div id="all-transactions-list" class="transactions-list">
+                    <!-- Populated by JS -->
+                </div>
+            </div>
+            <nav class="bottom-nav">
+                <button class="nav-item" onclick="showScreen('dashboard-screen')">
+                    <span class="material-icons">dashboard</span>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-item active">
+                    <span class="material-icons">list</span>
+                    <span>Transações</span>
+                </button>
+                <button class="nav-item fab-nav" onclick="scrollToTop()">
+                </button>
+                <button class="nav-item" onclick="showScreen('gamification-screen')">
+                    <span class="material-icons">emoji_events</span>
+                    <span>Pontuação</span>
+                </button>
+                <button class="nav-item">
+                    <span class="material-icons">person</span>
+                    <span>Perfil</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Gamification Screen -->
+        <div id="gamification-screen" class="screen">
+            <div class="screen-header">
+                <button class="icon-button" onclick="showScreen('dashboard-screen')">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <h2>Pontuação</h2>
+                <div></div>
+            </div>
+            <div class="content">
+                <!-- Level Card -->
+                <div class="level-card">
+                    <div class="level-header">
+                        <div class="level-icon">🥈</div>
+                        <div class="level-info">
+                            <h3>Nível Prata</h3>
+                            <p>3.150 / 5.000 pontos</p>
+                        </div>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 63%;"></div>
+                    </div>
+                    <p class="next-level-text">Faltam 1.850 pontos para Ouro</p>
+                </div>
+
+                <!-- Achievements -->
+                <div class="section">
+                    <h3 class="section-title">Conquistas</h3>
+                    <div class="achievements-grid">
+                        <div class="achievement-card unlocked">
+                            <span class="achievement-icon">🎯</span>
+                            <h4>Primeira Transação</h4>
+                            <p>Adicione sua primeira transação</p>
+                            <div class="achievement-points">
+                                <span class="material-icons">stars</span>
+                                <span>20 pts</span>
+                            </div>
+                            <span class="material-icons unlocked-badge">check_circle</span>
+                        </div>
+                        <div class="achievement-card unlocked">
+                            <span class="achievement-icon">🔥</span>
+                            <h4>Consistente</h4>
+                            <p>Use o app por 7 dias seguidos</p>
+                            <div class="achievement-points">
+                                <span class="material-icons">stars</span>
+                                <span>50 pts</span>
+                            </div>
+                            <span class="material-icons unlocked-badge">check_circle</span>
+                        </div>
+                        <div class="achievement-card">
+                            <span class="achievement-icon">🎖️</span>
+                            <h4>No Limite</h4>
+                            <p>Cumpra seu orçamento mensal</p>
+                            <div class="progress-mini">
+                                <div class="progress-fill" style="width: 60%;"></div>
+                            </div>
+                            <div class="achievement-points">
+                                <span class="material-icons">stars</span>
+                                <span>100 pts</span>
+                            </div>
+                        </div>
+                        <div class="achievement-card">
+                            <span class="achievement-icon">💪</span>
+                            <h4>Dedicado</h4>
+                            <p>Use o app por 30 dias seguidos</p>
+                            <div class="progress-mini">
+                                <div class="progress-fill" style="width: 40%;"></div>
+                            </div>
+                            <div class="achievement-points">
+                                <span class="material-icons">stars</span>
+                                <span>200 pts</span>
+                            </div>
+                        </div>
+                        <div class="achievement-card">
+                            <span class="achievement-icon">💰</span>
+                            <h4>Mestre da Economia</h4>
+                            <p>Economize 20% vs mês anterior</p>
+                            <div class="progress-mini">
+                                <div class="progress-fill" style="width: 80%;"></div>
+                            </div>
+                            <div class="achievement-points">
+                                <span class="material-icons">stars</span>
+                                <span>150 pts</span>
+                            </div>
+                        </div>
+                        <div class="achievement-card">
+                            <span class="achievement-icon">👥</span>
+                            <h4>Social</h4>
+                            <p>Convide um amigo que se cadastre</p>
+                            <div class="achievement-points">
+                                <span class="material-icons">stars</span>
+                                <span>100 pts</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Leaderboard -->
+                <div class="section">
+                    <div class="section-header">
+                        <h3 class="section-title">Ranking</h3>
+                        <button class="chip small">Este mês</button>
+                    </div>
+                    <div class="leaderboard">
+                        <div class="leaderboard-item">
+                            <span class="position">#1</span>
+                            <span class="avatar">👩</span>
+                            <span class="name">Maria Silva</span>
+                            <span class="points">8.500 pts</span>
+                        </div>
+                        <div class="leaderboard-item">
+                            <span class="position">#2</span>
+                            <span class="avatar">👨</span>
+                            <span class="name">Pedro Santos</span>
+                            <span class="points">7.200 pts</span>
+                        </div>
+                        <div class="leaderboard-item current-user">
+                            <span class="position">#3</span>
+                            <span class="avatar">😊</span>
+                            <span class="name">Você</span>
+                            <span class="points">2.450 pts</span>
+                        </div>
+                        <div class="leaderboard-item">
+                            <span class="position">#4</span>
+                            <span class="avatar">👩</span>
+                            <span class="name">Ana Costa</span>
+                            <span class="points">2.100 pts</span>
+                        </div>
+                        <div class="leaderboard-item">
+                            <span class="position">#5</span>
+                            <span class="avatar">👨</span>
+                            <span class="name">Carlos Lima</span>
+                            <span class="points">1.800 pts</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Challenge Card -->
+                <div class="challenge-card">
+                    <span class="material-icons challenge-icon">emoji_events</span>
+                    <h3>Desafio do Mês</h3>
+                    <p>Economize R$ 500 e ganhe 200 pontos extras!</p>
+                    <button class="btn-secondary">Aceitar Desafio</button>
+                </div>
+            </div>
+            <nav class="bottom-nav">
+                <button class="nav-item" onclick="showScreen('dashboard-screen')">
+                    <span class="material-icons">dashboard</span>
+                    <span>Dashboard</span>
+                </button>
+                <button class="nav-item" onclick="showScreen('transactions-screen')">
+                    <span class="material-icons">list</span>
+                    <span>Transações</span>
+                </button>
+                <button class="nav-item fab-nav" onclick="scrollToTop()">
+                </button>
+                <button class="nav-item active">
+                    <span class="material-icons">emoji_events</span>
+                    <span>Pontuação</span>
+                </button>
+                <button class="nav-item">
+                    <span class="material-icons">person</span>
+                    <span>Perfil</span>
+                </button>
+            </nav>
+        </div>
+
+        <!-- Payments Screen -->
+        <div id="payments-screen" class="screen">
+            <div class="screen-header">
+                <button class="icon-button" onclick="showScreen('dashboard-screen')">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <h2>Pagamentos</h2>
+                <div></div>
+            </div>
+            <div class="content">
+                <div class="section">
+                    <h3 class="section-title">Pagar Boleto</h3>
+                    <div class="card">
+                        <div class="input-group">
+                            <label>Código de Barras</label>
+                            <input type="text" id="barcode-input" placeholder="Digite ou cole o código de barras" maxlength="48">
+                            <button class="btn-secondary" style="margin-top: 8px;" onclick="scanBarcode()">
+                                <span class="material-icons">qr_code_scanner</span>
+                                Escanear Código
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section" id="boleto-details" style="display: none;">
+                    <h3 class="section-title">Detalhes do Boleto</h3>
+                    <div class="card">
+                        <div class="boleto-info">
+                            <div class="info-row">
+                                <span class="info-label">Beneficiário:</span>
+                                <span class="info-value" id="boleto-beneficiary">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Valor:</span>
+                                <span class="info-value boleto-amount" id="boleto-amount">R$ 0,00</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Vencimento:</span>
+                                <span class="info-value" id="boleto-due-date">-</span>
+                            </div>
+                            <div class="info-row">
+                                <span class="info-label">Status:</span>
+                                <span class="info-value" id="boleto-status">-</span>
+                            </div>
+                        </div>
+                        <button class="btn-primary" onclick="payBoleto()" style="margin-top: 16px;">
+                            <span class="material-icons">check_circle</span>
+                            Confirmar Pagamento
+                        </button>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Boletos Recentes</h3>
+                    <div class="boleto-list">
+                        <div class="boleto-item" onclick="loadBoleto('34191.79001 01043.510047 91020.150008 1 96610000050000')">
+                            <div class="boleto-icon">
+                                <span class="material-icons">receipt_long</span>
+                            </div>
+                            <div class="boleto-content">
+                                <strong>Conta de Luz - CEMIG</strong>
+                                <p>Venc: 28/11/2025</p>
+                            </div>
+                            <div class="boleto-amount-small">
+                                <strong>R$ 185,50</strong>
+                                <span class="status-badge warning">Pendente</span>
+                            </div>
+                        </div>
+                        <div class="boleto-item" onclick="loadBoleto('23793.38128 60000.123456 78901.234567 2 96620000120000')">
+                            <div class="boleto-icon">
+                                <span class="material-icons">receipt_long</span>
+                            </div>
+                            <div class="boleto-content">
+                                <strong>Conta de Água - COPASA</strong>
+                                <p>Venc: 30/11/2025</p>
+                            </div>
+                            <div class="boleto-amount-small">
+                                <strong>R$ 95,30</strong>
+                                <span class="status-badge warning">Pendente</span>
+                            </div>
+                        </div>
+                        <div class="boleto-item paid">
+                            <div class="boleto-icon">
+                                <span class="material-icons">receipt_long</span>
+                            </div>
+                            <div class="boleto-content">
+                                <strong>Internet - Vivo Fibra</strong>
+                                <p>Pago em: 20/11/2025</p>
+                            </div>
+                            <div class="boleto-amount-small">
+                                <strong>R$ 129,90</strong>
+                                <span class="status-badge success">Pago</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recharge Screen -->
+        <div id="recharge-screen" class="screen">
+            <div class="screen-header">
+                <button class="icon-button" onclick="showScreen('dashboard-screen')">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <h2>Recargas</h2>
+                <div></div>
+            </div>
+            <div class="content">
+                <!-- Tipo de Recarga -->
+                <div class="section">
+                    <h3 class="section-title">Selecione o Serviço</h3>
+                    <div class="recharge-types-grid">
+                        <div class="recharge-type-card active" id="phone-recharge" onclick="selectRechargeType('phone')">
+                            <span class="material-icons">phone_android</span>
+                            <span>Celular</span>
+                        </div>
+                        <div class="recharge-type-card" id="transport-recharge" onclick="selectRechargeType('transport')">
+                            <span class="material-icons">directions_bus</span>
+                            <span>Transporte</span>
+                        </div>
+                        <div class="recharge-type-card" id="tv-recharge" onclick="selectRechargeType('tv')">
+                            <span class="material-icons">tv</span>
+                            <span>TV Pré</span>
+                        </div>
+                        <div class="recharge-type-card" id="games-recharge" onclick="selectRechargeType('games')">
+                            <span class="material-icons">sports_esports</span>
+                            <span>Games</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recarga de Celular -->
+                <div class="recharge-content" id="phone-content">
+                    <div class="section">
+                        <h3 class="section-title">Operadora</h3>
+                        <div class="operators-grid">
+                            <div class="operator-card" onclick="selectOperator('vivo')">
+                                <div class="operator-logo" style="background: linear-gradient(135deg, #660099, #9933cc);">Vivo</div>
+                            </div>
+                            <div class="operator-card" onclick="selectOperator('claro')">
+                                <div class="operator-logo" style="background: linear-gradient(135deg, #cc0000, #ff0000);">Claro</div>
+                            </div>
+                            <div class="operator-card" onclick="selectOperator('tim')">
+                                <div class="operator-logo" style="background: linear-gradient(135deg, #0066cc, #0099ff);">TIM</div>
+                            </div>
+                            <div class="operator-card" onclick="selectOperator('oi')">
+                                <div class="operator-logo" style="background: linear-gradient(135deg, #ff9900, #ffcc00);">Oi</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="card">
+                            <div class="input-group">
+                                <label>Número do Celular</label>
+                                <input type="tel" id="phone-number" placeholder="(11) 99999-9999" maxlength="15">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">Valor da Recarga</h3>
+                        <div class="recharge-values-grid">
+                            <div class="value-card" onclick="selectRechargeValue(10)">
+                                <span class="value-amount">R$ 10</span>
+                            </div>
+                            <div class="value-card" onclick="selectRechargeValue(15)">
+                                <span class="value-amount">R$ 15</span>
+                            </div>
+                            <div class="value-card" onclick="selectRechargeValue(20)">
+                                <span class="value-amount">R$ 20</span>
+                                <span class="value-bonus">+R$ 2 bônus</span>
+                            </div>
+                            <div class="value-card" onclick="selectRechargeValue(30)">
+                                <span class="value-amount">R$ 30</span>
+                                <span class="value-bonus">+R$ 5 bônus</span>
+                            </div>
+                            <div class="value-card" onclick="selectRechargeValue(50)">
+                                <span class="value-amount">R$ 50</span>
+                                <span class="value-bonus">+R$ 10 bônus</span>
+                            </div>
+                            <div class="value-card" onclick="selectRechargeValue(100)">
+                                <span class="value-amount">R$ 100</span>
+                                <span class="value-bonus">+R$ 25 bônus</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="card">
+                            <div class="recharge-summary">
+                                <div class="summary-row">
+                                    <span>Valor da recarga:</span>
+                                    <strong id="selected-value">R$ 0,00</strong>
+                                </div>
+                                <div class="summary-row success">
+                                    <span>Bônus:</span>
+                                    <strong id="bonus-value">R$ 0,00</strong>
+                                </div>
+                                <div class="summary-row total">
+                                    <span>Total a pagar:</span>
+                                    <strong id="total-value">R$ 0,00</strong>
+                                </div>
+                            </div>
+                            <button class="btn-primary" onclick="processRecharge()" style="margin-top: 16px;">
+                                <span class="material-icons">check_circle</span>
+                                Confirmar Recarga
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recarga de Transporte -->
+                <div class="recharge-content" id="transport-content" style="display: none;">
+                    <div class="section">
+                        <h3 class="section-title">Tipo de Cartão</h3>
+                        <div class="transport-cards-grid">
+                            <div class="transport-card" onclick="selectTransport('bilhete')">
+                                <span class="material-icons">credit_card</span>
+                                <span>Bilhete Único</span>
+                            </div>
+                            <div class="transport-card" onclick="selectTransport('bom')">
+                                <span class="material-icons">credit_card</span>
+                                <span>Cartão BOM</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="card">
+                            <div class="input-group">
+                                <label>Número do Cartão</label>
+                                <input type="text" id="transport-card-number" placeholder="0000 0000 0000 0000" maxlength="19">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">Valor da Recarga</h3>
+                        <div class="recharge-values-grid">
+                            <div class="value-card" onclick="selectTransportValue(20)">
+                                <span class="value-amount">R$ 20</span>
+                            </div>
+                            <div class="value-card" onclick="selectTransportValue(30)">
+                                <span class="value-amount">R$ 30</span>
+                            </div>
+                            <div class="value-card" onclick="selectTransportValue(50)">
+                                <span class="value-amount">R$ 50</span>
+                            </div>
+                            <div class="value-card" onclick="selectTransportValue(100)">
+                                <span class="value-amount">R$ 100</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <div class="card">
+                            <button class="btn-primary" onclick="processTransportRecharge()">
+                                <span class="material-icons">check_circle</span>
+                                Confirmar Recarga
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recargas Recentes -->
+                <div class="section">
+                    <h3 class="section-title">Recargas Recentes</h3>
+                    <div class="transactions-list">
+                        <div class="transaction-item">
+                            <div class="transaction-icon">
+                                <span class="material-icons">phone_android</span>
+                            </div>
+                            <div class="transaction-details">
+                                <strong>Recarga Vivo</strong>
+                                <span>(11) 99876-5432</span>
+                                <span class="transaction-date">Hoje, 10:30</span>
+                            </div>
+                            <div class="transaction-amount success">
+                                <strong>R$ 20,00</strong>
+                                <span class="transaction-status">Concluída</span>
+                            </div>
+                        </div>
+                        <div class="transaction-item">
+                            <div class="transaction-icon">
+                                <span class="material-icons">directions_bus</span>
+                            </div>
+                            <div class="transaction-details">
+                                <strong>Bilhete Único</strong>
+                                <span>**** **** 1234</span>
+                                <span class="transaction-date">Ontem, 14:20</span>
+                            </div>
+                            <div class="transaction-amount success">
+                                <strong>R$ 50,00</strong>
+                                <span class="transaction-status">Concluída</span>
+                            </div>
+                        </div>
+                        <div class="transaction-item">
+                            <div class="transaction-icon">
+                                <span class="material-icons">phone_android</span>
+                            </div>
+                            <div class="transaction-details">
+                                <strong>Recarga TIM</strong>
+                                <span>(11) 91234-5678</span>
+                                <span class="transaction-date">20/11/2025</span>
+                            </div>
+                            <div class="transaction-amount success">
+                                <strong>R$ 30,00</strong>
+                                <span class="transaction-status">Concluída</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transfers Hub Screen -->
+        <div id="transfers-screen" class="screen">
+            <div class="screen-header">
+                <button class="icon-button" onclick="showScreen('dashboard-screen')">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <h2>Transferências</h2>
+                <div></div>
+            </div>
+            <div class="content">
+                <div class="section">
+                    <h3 class="section-title">Escolha o tipo de transferência</h3>
+                    <div class="transfer-types">
+                        <div class="transfer-type-card" onclick="showScreen('pix-screen')">
+                            <div class="transfer-icon">
+                                <span class="material-icons">payment</span>
+                            </div>
+                            <h3>PIX</h3>
+                            <p>Transferência instantânea nacional</p>
+                            <ul class="transfer-features">
+                                <li>✓ Grátis e instantâneo</li>
+                                <li>✓ 24 horas por dia</li>
+                                <li>✓ Chaves PIX salvas</li>
+                            </ul>
+                            <button class="btn-secondary">
+                                Fazer PIX
+                                <span class="material-icons">arrow_forward</span>
+                            </button>
+                        </div>
+                        <div class="transfer-type-card" onclick="showScreen('international-transfer-screen')">
+                            <div class="transfer-icon international">
+                                <span class="material-icons">public</span>
+                            </div>
+                            <h3>Internacional</h3>
+                            <p>Envie dinheiro para o mundo todo</p>
+                            <ul class="transfer-features">
+                                <li>✓ Multi-moedas (USD, EUR, GBP)</li>
+                                <li>✓ Taxas transparentes</li>
+                                <li>✓ Câmbio em tempo real</li>
+                            </ul>
+                            <button class="btn-secondary">
+                                Transferir Internacionalmente
+                                <span class="material-icons">arrow_forward</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Transferências Recentes</h3>
+                    <div class="recent-transfers-list">
+                        <div class="transfer-item">
+                            <div class="transfer-item-icon pix">
+                                <span class="material-icons">payment</span>
+                            </div>
+                            <div class="transfer-item-info">
+                                <strong>Maria Silva</strong>
+                                <p>PIX • maria@email.com</p>
+                            </div>
+                            <div class="transfer-item-amount">
+                                <strong>R$ 250,00</strong>
+                                <span>Hoje, 14:30</span>
+                            </div>
+                        </div>
+                        <div class="transfer-item">
+                            <div class="transfer-item-icon international">
+                                <span class="material-icons">public</span>
+                            </div>
+                            <div class="transfer-item-info">
+                                <strong>John Smith</strong>
+                                <p>Internacional • Bank of America</p>
+                            </div>
+                            <div class="transfer-item-amount">
+                                <strong>$ 100,00</strong>
+                                <span>Ontem, 10:15</span>
+                            </div>
+                        </div>
+                        <div class="transfer-item">
+                            <div class="transfer-item-icon pix">
+                                <span class="material-icons">payment</span>
+                            </div>
+                            <div class="transfer-item-info">
+                                <strong>Pedro Santos</strong>
+                                <p>PIX • 123.456.789-00</p>
+                            </div>
+                            <div class="transfer-item-amount">
+                                <strong>R$ 75,50</strong>
+                                <span>20/11, 16:45</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- International Transfer Screen -->
+        <div id="international-transfer-screen" class="screen">
+            <div class="screen-header">
+                <button class="icon-button" onclick="showScreen('dashboard-screen')">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <h2>Transferência Internacional</h2>
+                <div></div>
+            </div>
+            <div class="content">
+                <!-- Currency Balance Cards -->
+                <div class="currency-balance-section">
+                    <h3 class="section-title">Suas Carteiras Multi-Moeda</h3>
+                    <div class="currency-cards">
+                        <div class="currency-card active" onclick="selectCurrency('BRL')">
+                            <div class="currency-flag">🇧🇷</div>
+                            <div class="currency-info">
+                                <span class="currency-code">BRL</span>
+                                <span class="currency-name">Real Brasileiro</span>
+                            </div>
+                            <div class="currency-balance" id="currency-balance-brl">R$ 2.450,80</div>
+                        </div>
+                        <div class="currency-card" onclick="selectCurrency('USD')">
+                            <div class="currency-flag">🇺🇸</div>
+                            <div class="currency-info">
+                                <span class="currency-code">USD</span>
+                                <span class="currency-name">Dólar Americano</span>
+                            </div>
+                            <div class="currency-balance" id="currency-balance-usd">$ 152,30</div>
+                        </div>
+                        <div class="currency-card" onclick="selectCurrency('EUR')">
+                            <div class="currency-flag">🇪🇺</div>
+                            <div class="currency-info">
+                                <span class="currency-code">EUR</span>
+                                <span class="currency-name">Euro</span>
+                            </div>
+                            <div class="currency-balance" id="currency-balance-eur">€ 89,50</div>
+                        </div>
+                        <div class="currency-card" onclick="selectCurrency('GBP')">
+                            <div class="currency-flag">🇬🇧</div>
+                            <div class="currency-info">
+                                <span class="currency-code">GBP</span>
+                                <span class="currency-name">Libra Esterlina</span>
+                            </div>
+                            <div class="currency-balance" id="currency-balance-gbp">£ 45,20</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Exchange Rate Widget -->
+                <div class="exchange-rate-widget">
+                    <div class="exchange-header">
+                        <h3 class="section-title">Converter Moeda</h3>
+                        <span class="live-badge">🟢 Tempo Real</span>
+                    </div>
+                    <div class="currency-converter">
+                        <div class="converter-input-group">
+                            <label>Você envia</label>
+                            <div class="converter-input">
+                                <select id="from-currency" onchange="updateExchangeRate()">
+                                    <option value="BRL" selected>🇧🇷 BRL</option>
+                                    <option value="USD">🇺🇸 USD</option>
+                                    <option value="EUR">🇪🇺 EUR</option>
+                                    <option value="GBP">🇬🇧 GBP</option>
+                                </select>
+                                <input type="number" id="from-amount" placeholder="0.00" value="1000" oninput="updateExchangeRate()">
+                            </div>
+                        </div>
+                        
+                        <button class="swap-button" onclick="swapCurrencies()">
+                            <span class="material-icons">swap_vert</span>
+                        </button>
+
+                        <div class="converter-input-group">
+                            <label>Destinatário recebe</label>
+                            <div class="converter-input">
+                                <select id="to-currency" onchange="updateExchangeRate()">
+                                    <option value="USD" selected>🇺🇸 USD</option>
+                                    <option value="BRL">🇧🇷 BRL</option>
+                                    <option value="EUR">🇪🇺 EUR</option>
+                                    <option value="GBP">🇬🇧 GBP</option>
+                                </select>
+                                <input type="number" id="to-amount" placeholder="0.00" readonly>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="exchange-details">
+                        <div class="detail-row">
+                            <span>Taxa de câmbio</span>
+                            <strong id="exchange-rate">1 BRL = 0.20 USD</strong>
+                        </div>
+                        <div class="detail-row">
+                            <span>Taxa da transação (1%)</span>
+                            <strong id="transaction-fee">R$ 10,00</strong>
+                        </div>
+                        <div class="detail-row highlight">
+                            <span>Total a pagar</span>
+                            <strong id="total-amount">R$ 1.010,00</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transfer Form -->
+                <div class="international-form">
+                    <h3 class="section-title">Dados do Destinatário</h3>
+                    <div class="input-group">
+                        <label>Nome completo</label>
+                        <input type="text" placeholder="Ex: John Smith" id="recipient-name">
+                    </div>
+                    <div class="input-group">
+                        <label>País</label>
+                        <select id="recipient-country">
+                            <option value="USA">🇺🇸 Estados Unidos</option>
+                            <option value="UK">🇬🇧 Reino Unido</option>
+                            <option value="EU">🇪🇺 União Europeia</option>
+                            <option value="BR">🇧🇷 Brasil</option>
+                        </select>
+                    </div>
+                    <div class="input-group">
+                        <label>IBAN / Número da Conta</label>
+                        <input type="text" placeholder="Ex: GB29 NWBK 6016 1331 9268 19" id="recipient-account">
+                    </div>
+                    <div class="input-group">
+                        <label>SWIFT / BIC Code</label>
+                        <input type="text" placeholder="Ex: NWBKGB2L" id="recipient-swift">
+                    </div>
+
+                    <div class="saved-recipients">
+                        <h4>Destinatários Salvos</h4>
+                        <div class="recipient-item" onclick="loadRecipient('John Smith', 'GB29NWBK60161331926819')">
+                            <div class="recipient-avatar">🇺🇸</div>
+                            <div class="recipient-info">
+                                <strong>John Smith</strong>
+                                <p>Bank of America • USD</p>
+                            </div>
+                            <span class="material-icons">chevron_right</span>
+                        </div>
+                        <div class="recipient-item" onclick="loadRecipient('Marie Dubois', 'FR7630006000011234567890189')">
+                            <div class="recipient-avatar">🇫🇷</div>
+                            <div class="recipient-info">
+                                <strong>Marie Dubois</strong>
+                                <p>BNP Paribas • EUR</p>
+                            </div>
+                            <span class="material-icons">chevron_right</span>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" onclick="processInternationalTransfer()">
+                        <span class="material-icons">send</span>
+                        Confirmar Transferência Internacional
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- PIX Screen -->
+        <div id="pix-screen" class="screen">
+            <div class="screen-header">
+                <button class="icon-button" onclick="showScreen('dashboard-screen')">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <h2>PIX</h2>
+                <div></div>
+            </div>
+            <div class="content">
+                <div class="pix-container">
+                    <div class="pix-amount">
+                        <label>Valor</label>
+                        <input type="text" id="pix-amount" placeholder="R$ 0,00" class="pix-input">
+                    </div>
+                    <div class="input-group">
+                        <label>Chave PIX (CPF, Telefone, Email ou Aleatória)</label>
+                        <input type="text" id="pix-key" placeholder="Digite a chave PIX">
+                    </div>
+                    <div class="pix-quick-keys">
+                        <h4>Chaves Salvas</h4>
+                        <div class="quick-key-item">
+                            <span class="material-icons">person</span>
+                            <div>
+                                <strong>Maria Silva</strong>
+                                <p>maria@email.com</p>
+                            </div>
+                        </div>
+                        <div class="quick-key-item">
+                            <span class="material-icons">person</span>
+                            <div>
+                                <strong>Pedro Santos</strong>
+                                <p>123.456.789-00</p>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="btn-primary" onclick="realizarTransferenciaPix()">
+                        <span class="material-icons">send</span>
+                        Transferir
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Budgets Screen -->
+        <div id="budgets-screen" class="screen">
+            <div class="screen-header">
+                <button class="icon-button" onclick="showScreen('dashboard-screen')">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <h2>Orçamentos</h2>
+                <button class="icon-button" onclick="showCreateBudgetModal()">
+                    <span class="material-icons">add</span>
+                </button>
+            </div>
+            <div class="content">
+                <div class="budget-summary">
+                    <h3>Orçamento Total</h3>
+                    <h1>R$ 3.000,00</h1>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 68%; background: #e74c3c;"></div>
+                    </div>
+                    <p>R$ 2.049,20 gastos (68%)</p>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Orçamentos por Categoria</h3>
+                    <div class="budget-list">
+                        <div class="budget-item">
+                            <div class="budget-header">
+                                <span>🛒 Alimentação</span>
+                                <span class="budget-amount">R$ 850 / R$ 1.000</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 85%; background: #f39c12;"></div>
+                            </div>
+                            <p class="budget-status warning">⚠️ 85% do orçamento usado</p>
+                        </div>
+                        <div class="budget-item">
+                            <div class="budget-header">
+                                <span>🚗 Transporte</span>
+                                <span class="budget-amount">R$ 420 / R$ 600</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 70%; background: #00b894;"></div>
+                            </div>
+                            <p class="budget-status success">✓ Dentro do orçamento</p>
+                        </div>
+                        <div class="budget-item">
+                            <div class="budget-header">
+                                <span>🏠 Moradia</span>
+                                <span class="budget-amount">R$ 1.200 / R$ 1.200</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%; background: #d63031;"></div>
+                            </div>
+                            <p class="budget-status danger">🚨 Orçamento atingido!</p>
+                        </div>
+                        <div class="budget-item">
+                            <div class="budget-header">
+                                <span>🎬 Lazer</span>
+                                <span class="budget-amount">R$ 300 / R$ 400</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 75%; background: #00b894;"></div>
+                            </div>
+                            <p class="budget-status success">✓ Dentro do orçamento</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Cashback Screen -->
+        <div id="cashback-screen" class="screen">
+            <div class="screen-header">
+                <button class="icon-button" onclick="showScreen('dashboard-screen')">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <h2>Cashback</h2>
+                <div></div>
+            </div>
+            <div class="content">
+                <div class="cashback-summary">
+                    <h3>Cashback Disponível</h3>
+                    <h1 id="cashback-amount">R$ 87,40</h1>
+                    <button class="btn-primary" onclick="resgatarCashback()">Resgatar Cashback</button>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Parceiros</h3>
+                    <div class="partner-list">
+                        <div class="partner-card">
+                            <div class="partner-logo">🍔</div>
+                            <div class="partner-info">
+                                <h4>Restaurantes</h4>
+                                <p>Até 15% de cashback</p>
+                            </div>
+                            <span class="partner-tag">Ativo</span>
+                        </div>
+                        <div class="partner-card">
+                            <div class="partner-logo">🛒</div>
+                            <div class="partner-info">
+                                <h4>Supermercados</h4>
+                                <p>Até 10% de cashback</p>
+                            </div>
+                            <span class="partner-tag">Ativo</span>
+                        </div>
+                        <div class="partner-card">
+                            <div class="partner-logo">⛽</div>
+                            <div class="partner-info">
+                                <h4>Postos de Gasolina</h4>
+                                <p>Até 5% de cashback</p>
+                            </div>
+                            <span class="partner-tag">Ativo</span>
+                        </div>
+                        <div class="partner-card">
+                            <div class="partner-logo">📱</div>
+                            <div class="partner-info">
+                                <h4>Lojas de Eletrônicos</h4>
+                                <p>Até 8% de cashback</p>
+                            </div>
+                            <span class="partner-tag inactive">Inativo</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Histórico de Cashback</h3>
+                    <div class="cashback-history">
+                        <div class="cashback-item">
+                            <div>
+                                <strong>Restaurante Italiano</strong>
+                                <p>15% de R$ 125,00</p>
+                            </div>
+                            <span class="cashback-value">+R$ 18,75</span>
+                        </div>
+                        <div class="cashback-item">
+                            <div>
+                                <strong>Supermercado Extra</strong>
+                                <p>10% de R$ 156,80</p>
+                            </div>
+                            <span class="cashback-value">+R$ 15,68</span>
+                        </div>
+                        <div class="cashback-item">
+                            <div>
+                                <strong>Posto Shell</strong>
+                                <p>5% de R$ 230,00</p>
+                            </div>
+                            <span class="cashback-value">+R$ 11,50</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- AI Assistant Screen -->
+        <div id="ai-assistant-screen" class="screen">
+            <div class="screen-header">
+                <button class="icon-button" onclick="showScreen('dashboard-screen')">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <h2>Assistente IA</h2>
+                <div></div>
+            </div>
+            <div class="content" style="padding-bottom: 150px;">
+                <div class="chat-container" id="chat-messages">
+                    <div class="chat-message bot">
+                        <div class="message-avatar">🤖</div>
+                        <div class="message-bubble">
+                            <p>Olá! Sou seu assistente financeiro inteligente. Como posso ajudar você hoje?</p>
+                            <p style="margin-top: 12px; font-weight: 600;">Escolha uma opção:</p>
+                            <p style="margin-top: 8px;">1️⃣ Dicas de economia</p>
+                            <p>2️⃣ Analisar meus gastos</p>
+                            <p>3️⃣ Criar orçamento personalizado</p>
+                            <p>4️⃣ Como reduzir dívidas</p>
+                            <p>5️⃣ Investimentos para iniciantes</p>
+                            <span class="message-time">Agora</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input-container">
+                    <input type="text" id="chat-input" placeholder="Digite sua mensagem...">
+                    <button class="icon-button" onclick="sendChatMessage()">
+                        <span class="material-icons">send</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Insurance Screen -->
+        <div id="insurance-screen" class="screen">
+            <div class="screen-header">
+                <button class="icon-button" onclick="showScreen('dashboard-screen')">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <h2>Seguros</h2>
+                <div></div>
+            </div>
+            <div class="content">
+                <div class="info-banner">
+                    <span class="material-icons">info</span>
+                    <p>Proteja o que é importante para você com as melhores ofertas de seguro</p>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Tipos de Seguro</h3>
+                    <div class="insurance-list">
+                        <div class="insurance-card">
+                            <div class="insurance-icon">🚗</div>
+                            <div class="insurance-info">
+                                <h4>Seguro Auto</h4>
+                                <p>A partir de R$ 89,90/mês</p>
+                                <div class="insurance-features">
+                                    <span>✓ Cobertura total</span>
+                                    <span>✓ Assistência 24h</span>
+                                </div>
+                            </div>
+                            <button class="btn-secondary small">Cotar</button>
+                        </div>
+                        <div class="insurance-card">
+                            <div class="insurance-icon">🏠</div>
+                            <div class="insurance-info">
+                                <h4>Seguro Residencial</h4>
+                                <p>A partir de R$ 45,90/mês</p>
+                                <div class="insurance-features">
+                                    <span>✓ Incêndio e roubo</span>
+                                    <span>✓ Danos elétricos</span>
+                                </div>
+                            </div>
+                            <button class="btn-secondary small">Cotar</button>
+                        </div>
+                        <div class="insurance-card">
+                            <div class="insurance-icon">❤️</div>
+                            <div class="insurance-info">
+                                <h4>Seguro Vida</h4>
+                                <p>A partir de R$ 29,90/mês</p>
+                                <div class="insurance-features">
+                                    <span>✓ Cobertura familiar</span>
+                                    <span>✓ Assistência funeral</span>
+                                </div>
+                            </div>
+                            <button class="btn-secondary small">Cotar</button>
+                        </div>
+                        <div class="insurance-card">
+                            <div class="insurance-icon">📱</div>
+                            <div class="insurance-info">
+                                <h4>Seguro Celular</h4>
+                                <p>A partir de R$ 19,90/mês</p>
+                                <div class="insurance-features">
+                                    <span>✓ Roubo e quebra</span>
+                                    <span>✓ Troca rápida</span>
+                                </div>
+                            </div>
+                            <button class="btn-secondary small">Cotar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Loans Screen -->
+        <div id="loans-screen" class="screen">
+            <div class="screen-header">
+                <button class="icon-button" onclick="showScreen('dashboard-screen')">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <h2>Empréstimos</h2>
+                <div></div>
+            </div>
+            <div class="content">
+                <div class="loan-calculator">
+                    <h3>Simular Empréstimo</h3>
+                    <div class="input-group">
+                        <label>Valor desejado</label>
+                        <input type="number" id="loan-amount" value="5000" placeholder="R$ 5.000">
+                    </div>
+                    <div class="input-group">
+                        <label>Parcelas</label>
+                        <select id="loan-installments">
+                            <option value="6">6x</option>
+                            <option value="12" selected>12x</option>
+                            <option value="18">18x</option>
+                            <option value="24">24x</option>
+                            <option value="36">36x</option>
+                        </select>
+                    </div>
+                    <button class="btn-primary" onclick="calculateLoan()">Calcular</button>
+                    
+                    <div class="loan-result" id="loan-result">
+                        <h4>Resultado da Simulação</h4>
+                        <div class="loan-detail">
+                            <span>Parcela mensal:</span>
+                            <strong>R$ 476,19</strong>
+                        </div>
+                        <div class="loan-detail">
+                            <span>Taxa de juros:</span>
+                            <strong>2,5% a.m.</strong>
+                        </div>
+                        <div class="loan-detail">
+                            <span>Total a pagar:</span>
+                            <strong>R$ 5.714,28</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Ofertas Personalizadas</h3>
+                    <div class="loan-offers">
+                        <div class="loan-card best">
+                            <div class="loan-badge">Melhor Taxa</div>
+                            <h4>Empréstimo Pessoal</h4>
+                            <div class="loan-rate">2,5% a.m.</div>
+                            <p>Até R$ 50.000</p>
+                            <ul>
+                                <li>✓ Aprovação em 24h</li>
+                                <li>✓ Sem consulta ao SPC</li>
+                                <li>✓ Até 36x para pagar</li>
+                            </ul>
+                            <button class="btn-primary">Solicitar</button>
+                        </div>
+                        <div class="loan-card">
+                            <h4>Crédito Consignado</h4>
+                            <div class="loan-rate">1,8% a.m.</div>
+                            <p>Até R$ 100.000</p>
+                            <ul>
+                                <li>✓ Desconto em folha</li>
+                                <li>✓ Menor taxa do mercado</li>
+                                <li>✓ Até 84x para pagar</li>
+                            </ul>
+                            <button class="btn-secondary">Solicitar</button>
+                        </div>
+                        <div class="loan-card">
+                            <h4>Antecipação FGTS</h4>
+                            <div class="loan-rate">1,49% a.m.</div>
+                            <p>Até R$ 5.000</p>
+                            <ul>
+                                <li>✓ Aprovação imediata</li>
+                                <li>✓ Sem análise de crédito</li>
+                                <li>✓ Até 12x para pagar</li>
+                            </ul>
+                            <button class="btn-secondary">Solicitar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Reports Screen -->
+        <div id="reports-screen" class="screen">
+            <div class="screen-header">
+                <button class="icon-button" onclick="showScreen('dashboard-screen')">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <h2>Relatórios</h2>
+                <div></div>
+            </div>
+            <div class="content">
+                <div class="report-filters">
+                    <select class="filter-select">
+                        <option>Este mês</option>
+                        <option>Últimos 3 meses</option>
+                        <option>Últimos 6 meses</option>
+                        <option>Este ano</option>
+                    </select>
+                    <button class="btn-primary">
+                        <span class="material-icons">download</span>
+                        Exportar PDF
+                    </button>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Resumo Financeiro</h3>
+                    <div class="report-summary">
+                        <div class="report-card">
+                            <span class="material-icons" style="color: #00b894;">trending_up</span>
+                            <div>
+                                <p>Total de Receitas</p>
+                                <h3>R$ 5.300,00</h3>
+                                <span class="trend positive">+12% vs mês anterior</span>
+                            </div>
+                        </div>
+                        <div class="report-card">
+                            <span class="material-icons" style="color: #d63031;">trending_down</span>
+                            <div>
+                                <p>Total de Despesas</p>
+                                <h3>R$ 2.049,20</h3>
+                                <span class="trend negative">+8% vs mês anterior</span>
+                            </div>
+                        </div>
+                        <div class="report-card">
+                            <span class="material-icons" style="color: #6c5ce7;">account_balance</span>
+                            <div>
+                                <p>Saldo Final</p>
+                                <h3>R$ 3.250,80</h3>
+                                <span class="trend positive">+15% vs mês anterior</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Análise por Categoria</h3>
+                    <div class="category-analysis">
+                        <div class="analysis-item">
+                            <div class="analysis-header">
+                                <span>🛒 Alimentação</span>
+                                <strong>R$ 850,00</strong>
+                            </div>
+                            <div class="analysis-bar">
+                                <div class="analysis-fill" style="width: 41%; background: #e74c3c;"></div>
+                            </div>
+                            <p>41% do total</p>
+                        </div>
+                        <div class="analysis-item">
+                            <div class="analysis-header">
+                                <span>🚗 Transporte</span>
+                                <strong>R$ 420,00</strong>
+                            </div>
+                            <div class="analysis-bar">
+                                <div class="analysis-fill" style="width: 20%; background: #3498db;"></div>
+                            </div>
+                            <p>20% do total</p>
+                        </div>
+                        <div class="analysis-item">
+                            <div class="analysis-header">
+                                <span>🎬 Lazer</span>
+                                <strong>R$ 300,00</strong>
+                            </div>
+                            <div class="analysis-bar">
+                                <div class="analysis-fill" style="width: 15%; background: #f39c12;"></div>
+                            </div>
+                            <p>15% do total</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Metas vs Realizado</h3>
+                    <div class="goals-comparison">
+                        <div class="goal-item">
+                            <h4>Meta de Economia</h4>
+                            <div class="goal-bars">
+                                <div class="goal-bar meta">
+                                    <span>Meta: R$ 1.500</span>
+                                    <div class="bar" style="width: 100%; background: #b2bec3;"></div>
+                                </div>
+                                <div class="goal-bar real">
+                                    <span>Real: R$ 1.200</span>
+                                    <div class="bar" style="width: 80%; background: #00b894;"></div>
+                                </div>
+                            </div>
+                            <p class="goal-status">80% da meta alcançada</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Withdraw Screen -->
+        <div id="withdraw-screen" class="screen">
+            <div class="screen-header">
+                <button class="icon-button" onclick="showScreen('dashboard-screen')">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <h2>Sacar Dinheiro</h2>
+                <div></div>
+            </div>
+            <div class="content">
+                <!-- Balance Info -->
+                <div class="withdraw-balance">
+                    <p>Saldo Disponível</p>
+                    <h1>R$ 2.450,80</h1>
+                </div>
+
+                <!-- Quick Values -->
+                <div class="quick-values">
+                    <button class="value-btn" onclick="setWithdrawAmount(50)">R$ 50</button>
+                    <button class="value-btn" onclick="setWithdrawAmount(100)">R$ 100</button>
+                    <button class="value-btn" onclick="setWithdrawAmount(200)">R$ 200</button>
+                    <button class="value-btn" onclick="setWithdrawAmount(500)">R$ 500</button>
+                </div>
+
+                <!-- Custom Amount -->
+                <div class="form-container">
+                    <div class="input-group">
+                        <label>Valor do Saque</label>
+                        <input type="number" id="withdraw-amount" placeholder="R$ 0,00" step="0.01">
+                    </div>
+
+                    <div class="input-group">
+                        <label>Método de Saque</label>
+                        <select id="withdraw-method">
+                            <option value="pix">PIX (Instantâneo)</option>
+                            <option value="ted">TED (Até 2h úteis)</option>
+                            <option value="conta">Transferência para Conta Bancária</option>
+                        </select>
+                    </div>
+
+                    <div class="input-group">
+                        <label>Chave PIX / Conta</label>
+                        <input type="text" id="withdraw-destination" placeholder="Digite a chave PIX ou conta">
+                    </div>
+
+                    <!-- Withdraw Info -->
+                    <div class="withdraw-info">
+                        <div class="info-row">
+                            <span>Taxa de saque:</span>
+                            <strong>Grátis</strong>
+                        </div>
+                        <div class="info-row">
+                            <span>Valor a receber:</span>
+                            <strong id="withdraw-total">R$ 0,00</strong>
+                        </div>
+                        <div class="info-row">
+                            <span>Tempo estimado:</span>
+                            <strong>Instantâneo</strong>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" onclick="processWithdraw()">
+                        <span class="material-icons">send</span>
+                        Confirmar Saque
+                    </button>
+                </div>
+
+                <!-- Recent Withdrawals -->
+                <div class="section">
+                    <h3 class="section-title">Saques Recentes</h3>
+                    <div class="transactions-list">
+                        <div class="transaction-item">
+                            <div class="transaction-icon" style="background: #FFF3E6; color: #f39c12;">
+                                💸
+                            </div>
+                            <div class="transaction-details">
+                                <div class="transaction-title">Saque via PIX</div>
+                                <div class="transaction-subtitle">Concluído • Há 2 dias</div>
+                            </div>
+                            <div class="transaction-amount expense">
+                                -R$ 500,00
+                            </div>
+                        </div>
+                        <div class="transaction-item">
+                            <div class="transaction-icon" style="background: #FFF3E6; color: #f39c12;">
+                                💸
+                            </div>
+                            <div class="transaction-details">
+                                <div class="transaction-title">Saque via TED</div>
+                                <div class="transaction-subtitle">Concluído • Há 1 semana</div>
+                            </div>
+                            <div class="transaction-amount expense">
+                                -R$ 1.000,00
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Notifications Screen -->
+        <div id="notifications-screen" class="screen">
+            <div class="screen-header">
+                <button class="icon-button" onclick="showScreen('dashboard-screen')">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <h2>Notificações</h2>
+                <button class="icon-button" onclick="markAllAsRead()">
+                    <span class="material-icons">done_all</span>
+                </button>
+            </div>
+            <div class="content">
+                <div class="notification-tabs">
+                    <button class="tab-btn active" onclick="filterNotifications('todas')">Todas (<span id="count-todas">0</span>)</button>
+                    <button class="tab-btn" onclick="filterNotifications('alertas')">Alertas (<span id="count-alertas">0</span>)</button>
+                    <button class="tab-btn" onclick="filterNotifications('dicas')">Dicas (<span id="count-dicas">0</span>)</button>
+                </div>
+
+                <div class="notifications-list">
+                    <!-- Notificações serão geradas dinamicamente pelo sistema inteligente -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Appearance Screen -->
+        <div id="appearance-screen" class="screen">
+            <div class="screen-header">
+                <button class="icon-button" onclick="showScreen('profile-screen')">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <h2>Aparência</h2>
+                <div></div>
+            </div>
+            <div class="content">
+                <div class="section">
+                    <h3 class="section-title">Tema</h3>
+                    <div class="menu-list">
+                        <div class="menu-item" onclick="setTheme('light')">
+                            <span class="material-icons">light_mode</span>
+                            <div style="flex: 1;">
+                                <span>Claro</span>
+                                <small style="display: block; color: var(--gray); font-size: 12px;">Tema padrão do sistema</small>
+                            </div>
+                            <span class="material-icons theme-check" id="theme-light">check_circle</span>
+                        </div>
+                        <div class="menu-item" onclick="setTheme('dark')">
+                            <span class="material-icons">dark_mode</span>
+                            <div style="flex: 1;">
+                                <span>Escuro</span>
+                                <small style="display: block; color: var(--gray); font-size: 12px;">Reduz cansaço visual</small>
+                            </div>
+                            <span class="material-icons theme-check" id="theme-dark" style="opacity: 0.3;">check_circle</span>
+                        </div>
+                        <div class="menu-item" onclick="setTheme('auto')">
+                            <span class="material-icons">brightness_auto</span>
+                            <div style="flex: 1;">
+                                <span>Automático</span>
+                                <small style="display: block; color: var(--gray); font-size: 12px;">Segue configuração do sistema</small>
+                            </div>
+                            <span class="material-icons theme-check" id="theme-auto" style="opacity: 0.3;">check_circle</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Cores de Destaque</h3>
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;">
+                        <div onclick="setAccentColor('#667eea')" style="aspect-ratio: 1; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 12px; cursor: pointer; display: flex; align-items: center; justify-content: center;">
+                            <span class="material-icons" style="color: white; font-size: 24px;">check</span>
+                        </div>
+                        <div onclick="setAccentColor('#10b981')" style="aspect-ratio: 1; background: #10b981; border-radius: 12px; cursor: pointer;"></div>
+                        <div onclick="setAccentColor('#f59e0b')" style="aspect-ratio: 1; background: #f59e0b; border-radius: 12px; cursor: pointer;"></div>
+                        <div onclick="setAccentColor('#ef4444')" style="aspect-ratio: 1; background: #ef4444; border-radius: 12px; cursor: pointer;"></div>
+                        <div onclick="setAccentColor('#3b82f6')" style="aspect-ratio: 1; background: #3b82f6; border-radius: 12px; cursor: pointer;"></div>
+                        <div onclick="setAccentColor('#8b5cf6')" style="aspect-ratio: 1; background: #8b5cf6; border-radius: 12px; cursor: pointer;"></div>
+                        <div onclick="setAccentColor('#ec4899')" style="aspect-ratio: 1; background: #ec4899; border-radius: 12px; cursor: pointer;"></div>
+                        <div onclick="setAccentColor('#06b6d4')" style="aspect-ratio: 1; background: #06b6d4; border-radius: 12px; cursor: pointer;"></div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Visualização</h3>
+                    <div class="menu-list">
+                        <div class="menu-item">
+                            <span class="material-icons">text_fields</span>
+                            <div style="flex: 1;">
+                                <span>Tamanho da Fonte</span>
+                                <small style="display: block; color: var(--gray); font-size: 12px;">Médio</small>
+                            </div>
+                            <span class="material-icons">chevron_right</span>
+                        </div>
+                        <div class="menu-item">
+                            <span class="material-icons">animation</span>
+                            <div style="flex: 1;">
+                                <span>Animações</span>
+                                <small style="display: block; color: var(--gray); font-size: 12px;">Melhoram a experiência</small>
+                            </div>
+                            <label class="switch">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Language Screen -->
+        <div id="language-screen" class="screen">
+            <div class="screen-header">
+                <button class="icon-button" onclick="showScreen('profile-screen')">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <h2>Idioma</h2>
+                <div></div>
+            </div>
+            <div class="content">
+                <div class="section">
+                    <h3 class="section-title">Idioma do Aplicativo</h3>
+                    <div class="menu-list">
+                        <div class="menu-item" onclick="setLanguage('pt-BR')">
+                            <span style="font-size: 32px;">🇧🇷</span>
+                            <div style="flex: 1;">
+                                <span>Português (Brasil)</span>
+                                <small style="display: block; color: var(--gray); font-size: 12px;">Portuguese (Brazil)</small>
+                            </div>
+                            <span class="material-icons" style="color: #10b981;">check_circle</span>
+                        </div>
+                        <div class="menu-item" onclick="setLanguage('en-US')">
+                            <span style="font-size: 32px;">🇺🇸</span>
+                            <div style="flex: 1;">
+                                <span>English (US)</span>
+                                <small style="display: block; color: var(--gray); font-size: 12px;">Inglês (Estados Unidos)</small>
+                            </div>
+                            <span class="material-icons" style="opacity: 0.3;">check_circle</span>
+                        </div>
+                        <div class="menu-item" onclick="setLanguage('es-ES')">
+                            <span style="font-size: 32px;">🇪🇸</span>
+                            <div style="flex: 1;">
+                                <span>Español</span>
+                                <small style="display: block; color: var(--gray); font-size: 12px;">Espanhol</small>
+                            </div>
+                            <span class="material-icons" style="opacity: 0.3;">check_circle</span>
+                        </div>
+                        <div class="menu-item" onclick="setLanguage('fr-FR')">
+                            <span style="font-size: 32px;">🇫🇷</span>
+                            <div style="flex: 1;">
+                                <span>Français</span>
+                                <small style="display: block; color: var(--gray); font-size: 12px;">Francês</small>
+                            </div>
+                            <span class="material-icons" style="opacity: 0.3;">check_circle</span>
+                        </div>
+                        <div class="menu-item" onclick="setLanguage('de-DE')">
+                            <span style="font-size: 32px;">🇩🇪</span>
+                            <div style="flex: 1;">
+                                <span>Deutsch</span>
+                                <small style="display: block; color: var(--gray); font-size: 12px;">Alemão</small>
+                            </div>
+                            <span class="material-icons" style="opacity: 0.3;">check_circle</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="info-card" style="background: var(--background); padding: 16px; border-radius: 12px;">
+                        <div style="display: flex; gap: 12px;">
+                            <span class="material-icons" style="color: var(--primary);">info</span>
+                            <div>
+                                <p style="margin: 0 0 4px 0; font-weight: 500; font-size: 14px;">Tradução Automática</p>
+                                <p style="margin: 0; color: var(--gray); font-size: 13px; line-height: 1.5;">O idioma será aplicado em toda a interface do aplicativo. Algumas informações financeiras permanecerão em português.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accessibility Screen -->
+        <div id="accessibility-screen" class="screen">
+            <div class="screen-header">
+                <button class="icon-button" onclick="showScreen('profile-screen')">
+                    <span class="material-icons">arrow_back</span>
+                </button>
+                <h2>Acessibilidade</h2>
+                <div></div>
+            </div>
+            <div class="content">
+                <!-- Accessibility Banner -->
+                <div class="accessibility-banner">
+                    <span class="material-icons">accessible</span>
+                    <div>
+                        <h3>Finanças para Todos</h3>
+                        <p>Recursos adaptados para garantir que todos possam usar o MoneyFlow com autonomia e conforto</p>
+                    </div>
+                </div>
+
+                <!-- Visual Accessibility -->
+                <div class="section">
+                    <h3 class="section-title">♿ Acessibilidade Visual</h3>
+                    <div class="accessibility-list">
+                        <div class="accessibility-card">
+                            <div class="acc-header">
+                                <span class="material-icons">visibility</span>
+                                <h4>Para Pessoas Cegas</h4>
+                            </div>
+                            <div class="acc-feature">
+                                <span class="material-icons check">check_circle</span>
+                                <div>
+                                    <strong>Leitor de Tela Integrado</strong>
+                                    <p>Compatível com NVDA, JAWS e TalkBack. Todas as funcionalidades são narradas.</p>
+                                </div>
+                            </div>
+                            <div class="acc-feature">
+                                <span class="material-icons check">check_circle</span>
+                                <div>
+                                    <strong>Navegação por Voz</strong>
+                                    <p>Use comandos de voz para adicionar transações: "Ok MoneyFlow, adicionar gasto de 50 reais em alimentação"</p>
+                                </div>
+                            </div>
+                            <div class="acc-feature">
+                                <span class="material-icons check">check_circle</span>
+                                <div>
+                                    <strong>Audiodescrição de Gráficos</strong>
+                                    <p>Gráficos são descritos em detalhes: "Alimentação representa 41% dos gastos, totalizando 850 reais"</p>
+                                </div>
+                            </div>
+                            <div class="acc-feature">
+                                <span class="material-icons check">check_circle</span>
+                                <div>
+                                    <strong>Alertas Sonoros</strong>
+                                    <p>Notificações importantes são sinalizadas com áudio e vibração.</p>
+                                </div>
+                            </div>
+                            <button class="btn-primary small" onclick="activateBlindMode()">Ativar Modo Cego</button>
+                        </div>
+
+                        <div class="accessibility-card">
+                            <div class="acc-header">
+                                <span class="material-icons">visibility_off</span>
+                                <h4>Baixa Visão</h4>
+                            </div>
+                            <div class="acc-controls">
+                                <div class="control-item">
+                                    <label>Tamanho da Fonte</label>
+                                    <div class="control-buttons">
+                                        <button class="control-btn" onclick="setFontSize('small')">A-</button>
+                                        <button class="control-btn active" onclick="setFontSize('normal')">A</button>
+                                        <button class="control-btn" onclick="setFontSize('large')">A+</button>
+                                        <button class="control-btn" onclick="setFontSize('xlarge')">A++</button>
+                                    </div>
+                                </div>
+                                <div class="control-item">
+                                    <label>Alto Contraste</label>
+                                    <div class="control-buttons">
+                                        <button class="control-btn active" onclick="setContrast('default')">Padrão</button>
+                                        <button class="control-btn" onclick="setContrast('bw')">Preto/Branco</button>
+                                        <button class="control-btn" onclick="setContrast('yb')">Amarelo/Preto</button>
+                                    </div>
+                                </div>
+                                <div class="control-item">
+                                    <label>Espaçamento</label>
+                                    <div class="control-buttons">
+                                        <button class="control-btn" onclick="setSpacing('compact')">Compacto</button>
+                                        <button class="control-btn active" onclick="setSpacing('normal')">Normal</button>
+                                        <button class="control-btn" onclick="setSpacing('wide')">Amplo</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="acc-feature">
+                                <span class="material-icons check">check_circle</span>
+                                <div>
+                                    <strong>Modo Lupa</strong>
+                                    <p>Duplo toque amplia áreas da tela em até 300%</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hearing Accessibility -->
+                <div class="section">
+                    <h3 class="section-title">👂 Acessibilidade Auditiva</h3>
+                    <div class="accessibility-list">
+                        <div class="accessibility-card">
+                            <div class="acc-header">
+                                <span class="material-icons">hearing_disabled</span>
+                                <h4>Para Pessoas Surdas</h4>
+                            </div>
+                            <div class="acc-feature">
+                                <span class="material-icons check">check_circle</span>
+                                <div>
+                                    <strong>Libras Integrado</strong>
+                                    <p>Avatar em Libras traduz todas as informações importantes e notificações.</p>
+                                </div>
+                            </div>
+                            <div class="acc-feature">
+                                <span class="material-icons check">check_circle</span>
+                                <div>
+                                    <strong>Legendas Automáticas</strong>
+                                    <p>Vídeos tutoriais e suporte por vídeo com legendas em português.</p>
+                                </div>
+                            </div>
+                            <div class="acc-feature">
+                                <span class="material-icons check">check_circle</span>
+                                <div>
+                                    <strong>Chat Visual Prioritário</strong>
+                                    <p>Atendimento sempre por chat com visualização clara das mensagens.</p>
+                                </div>
+                            </div>
+                            <div class="acc-feature">
+                                <span class="material-icons check">check_circle</span>
+                                <div>
+                                    <strong>Alertas Visuais</strong>
+                                    <p>Notificações com flashes na tela e banners grandes coloridos.</p>
+                                </div>
+                            </div>
+                            <button class="btn-primary small" onclick="activateDeafMode()">Ativar Modo Surdo</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Motor/Speech Accessibility -->
+                <div class="section">
+                    <h3 class="section-title">🗣️ Outras Acessibilidades</h3>
+                    <div class="accessibility-list">
+                        <div class="accessibility-card">
+                            <div class="acc-header">
+                                <span class="material-icons">voice_over_off</span>
+                                <h4>Para Pessoas Mudas</h4>
+                            </div>
+                            <div class="acc-feature">
+                                <span class="material-icons check">check_circle</span>
+                                <div>
+                                    <strong>Comunicação 100% Visual</strong>
+                                    <p>Todo atendimento disponível por chat, sem necessidade de áudio.</p>
+                                </div>
+                            </div>
+                            <div class="acc-feature">
+                                <span class="material-icons check">check_circle</span>
+                                <div>
+                                    <strong>Suporte via WhatsApp</strong>
+                                    <p>Atendimento preferencial por mensagem de texto.</p>
+                                </div>
+                            </div>
+                            <button class="btn-primary small" onclick="showToast('Configuração salva! Atendimento via chat ativado', '#00b894')">Configurar</button>
+                        </div>
+
+                        <div class="accessibility-card">
+                            <div class="acc-header">
+                                <span class="material-icons">elderly</span>
+                                <h4>Modo Terceira Idade</h4>
+                            </div>
+                            <div class="acc-feature">
+                                <span class="material-icons check">check_circle</span>
+                                <div>
+                                    <strong>Interface Simplificada</strong>
+                                    <p>Botões maiores (60px), menos opções por tela, navegação intuitiva.</p>
+                                </div>
+                            </div>
+                            <div class="acc-feature">
+                                <span class="material-icons check">check_circle</span>
+                                <div>
+                                    <strong>Fonte Extra Grande</strong>
+                                    <p>Texto em 24px por padrão, com opção até 36px.</p>
+                                </div>
+                            </div>
+                            <div class="acc-feature">
+                                <span class="material-icons check">check_circle</span>
+                                <div>
+                                    <strong>Tutoriais Passo a Passo</strong>
+                                    <p>Vídeos curtos (2min) explicando cada função com linguagem clara.</p>
+                                </div>
+                            </div>
+                            <div class="acc-feature">
+                                <span class="material-icons check">check_circle</span>
+                                <div>
+                                    <strong>Suporte Humanizado</strong>
+                                    <p>Atendimento telefônico com agentes treinados, sem chatbot.</p>
+                                </div>
+                            </div>
+                            <div class="acc-feature">
+                                <span class="material-icons check">check_circle</span>
+                                <div>
+                                    <strong>Confirmação Dupla</strong>
+                                    <p>Transações importantes pedem confirmação em 2 etapas para evitar erros.</p>
+                                </div>
+                            </div>
+                            <button class="btn-primary small" onclick="activateSeniorMode()">Ativar Modo Sênior</button>
+                        </div>
+
+                        <div class="accessibility-card">
+                            <div class="acc-header">
+                                <span class="material-icons">accessible_forward</span>
+                                <h4>Mobilidade Reduzida</h4>
+                            </div>
+                            <div class="acc-feature">
+                                <span class="material-icons check">check_circle</span>
+                                <div>
+                                    <strong>Controle por Voz Completo</strong>
+                                    <p>Todas as funções podem ser executadas por comandos de voz.</p>
+                                </div>
+                            </div>
+                            <div class="acc-feature">
+                                <span class="material-icons check">check_circle</span>
+                                <div>
+                                    <strong>Teclado Virtual Adaptado</strong>
+                                    <p>Suporte a teclas de atalho e navegação apenas com Tab.</p>
+                                </div>
+                            </div>
+                            <div class="acc-feature">
+                                <span class="material-icons check">check_circle</span>
+                                <div>
+                                    <strong>Switch Control</strong>
+                                    <p>Compatível com dispositivos de tecnologia assistiva.</p>
+                                </div>
+                            </div>
+                            <button class="btn-primary small">Configurar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Certifications -->
+                <div class="section">
+                    <h3 class="section-title">🏆 Certificações e Conformidade</h3>
+                    <div class="certifications">
+                        <div class="cert-badge">
+                            <span class="material-icons">verified</span>
+                            <div>
+                                <strong>WCAG 2.1 Nível AAA</strong>
+                                <p>Mais alto padrão de acessibilidade web</p>
+                            </div>
+                        </div>
+                        <div class="cert-badge">
+                            <span class="material-icons">verified</span>
+                            <div>
+                                <strong>Lei Brasileira de Inclusão</strong>
+                                <p>Conforme LBI nº 13.146/2015</p>
+                            </div>
+                        </div>
+                        <div class="cert-badge">
+                            <span class="material-icons">verified</span>
+                            <div>
+                                <strong>Certificado ICP-Brasil</strong>
+                                <p>Assinatura digital acessível</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contact -->
+                <div class="accessibility-contact">
+                    <h4>📞 Precisa de Ajuda com Acessibilidade?</h4>
+                    <p>Nossa equipe está pronta para auxiliar:</p>
+                    <div class="contact-options">
+                        <button class="contact-btn">
+                            <span class="material-icons">phone</span>
+                            0800 123 4567 (24h)
+                        </button>
+                        <button class="contact-btn">
+                            <span class="material-icons">chat</span>
+                            Chat Prioritário
+                        </button>
+                        <button class="contact-btn">
+                            <span class="material-icons">videocam</span>
+                            Vídeo c/ Libras
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Success Modal -->
+        <div id="success-modal" class="modal">
+            <div class="modal-content success">
+                <span class="material-icons modal-icon">check_circle</span>
+                <h3 id="modal-title">Transação Adicionada!</h3>
+                <p id="modal-message">A IA categorizou automaticamente como "Alimentação" com 98% de confiança!</p>
+                <div class="achievement-notification">
+                    <span class="material-icons">emoji_events</span>
+                    <p>🔥 Streak de 7 dias! +50 pontos</p>
+                </div>
+                <button class="btn-primary" onclick="closeModal()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js"></script>
+    <script src="moneyflow-tracking.js"></script>
+</body>
+</html>
