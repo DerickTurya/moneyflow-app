@@ -451,6 +451,8 @@ window.showScreen = function(screenId) {
             renderMyInsurances();
         } else if (screenId === 'loans-screen') {
             renderMyLoans();
+        } else if (screenId === 'reports-screen') {
+            generateReport();
         }
     } else {
         console.error('❌ Screen não encontrado:', screenId);
@@ -4289,6 +4291,308 @@ function payLoanInstallment(loanId) {
         renderRecentTransactions();
         renderMyLoans();
     }
+}
+
+// Reports Generation
+function generateReport() {
+    const period = document.getElementById('report-period').value;
+    const now = new Date();
+    let startDate = new Date();
+    
+    switch(period) {
+        case 'month':
+            startDate.setMonth(now.getMonth() - 1);
+            break;
+        case '3months':
+            startDate.setMonth(now.getMonth() - 3);
+            break;
+        case '6months':
+            startDate.setMonth(now.getMonth() - 6);
+            break;
+        case 'year':
+            startDate.setFullYear(now.getFullYear() - 1);
+            break;
+        case 'all':
+            startDate = new Date(2000, 0, 1);
+            break;
+    }
+    
+    // Filtrar transações do período
+    const filteredTransactions = transactions.filter(t => {
+        const transDate = new Date(t.date);
+        return transDate >= startDate && transDate <= now;
+    });
+    
+    // Calcular receitas e despesas
+    const income = filteredTransactions
+        .filter(t => t.type === 'income')
+        .reduce((sum, t) => sum + Math.abs(t.amount), 0);
+    
+    const expenses = filteredTransactions
+        .filter(t => t.type === 'expense')
+        .reduce((sum, t) => sum + Math.abs(t.amount), 0);
+    
+    const balance = income - expenses;
+    
+    // Renderizar resumo
+    document.getElementById('report-summary').innerHTML = `
+        <div class="report-card">
+            <span class="material-icons" style="color: #00b894;">trending_up</span>
+            <div>
+                <p>Total de Receitas</p>
+                <h3>R$ ${income.toFixed(2)}</h3>
+                <span class="trend positive">Período selecionado</span>
+            </div>
+        </div>
+        <div class="report-card">
+            <span class="material-icons" style="color: #d63031;">trending_down</span>
+            <div>
+                <p>Total de Despesas</p>
+                <h3>R$ ${expenses.toFixed(2)}</h3>
+                <span class="trend negative">Período selecionado</span>
+            </div>
+        </div>
+        <div class="report-card">
+            <span class="material-icons" style="color: #6c5ce7;">account_balance</span>
+            <div>
+                <p>Saldo do Período</p>
+                <h3 style="color: ${balance >= 0 ? '#00b894' : '#e74c3c'};">R$ ${balance.toFixed(2)}</h3>
+                <span class="trend ${balance >= 0 ? 'positive' : 'negative'}">${balance >= 0 ? 'Positivo' : 'Negativo'}</span>
+            </div>
+        </div>
+    `;
+    
+    // Análise por categoria
+    const categoryExpenses = {};
+    filteredTransactions
+        .filter(t => t.type === 'expense')
+        .forEach(t => {
+            const cat = t.categoryName || 'Outros';
+            if (!categoryExpenses[cat]) {
+                categoryExpenses[cat] = { amount: 0, icon: t.icon || '📝' };
+            }
+            categoryExpenses[cat].amount += Math.abs(t.amount);
+        });
+    
+    const categoryAnalysisHTML = Object.entries(categoryExpenses)
+        .sort((a, b) => b[1].amount - a[1].amount)
+        .slice(0, 5)
+        .map(([cat, data]) => {
+            const percentage = expenses > 0 ? (data.amount / expenses * 100) : 0;
+            const colors = ['#e74c3c', '#3498db', '#f39c12', '#9b59b6', '#1abc9c'];
+            const color = colors[Math.floor(Math.random() * colors.length)];
+            
+            return `
+                <div class="analysis-item">
+                    <div class="analysis-header">
+                        <span>${data.icon} ${cat}</span>
+                        <strong>R$ ${data.amount.toFixed(2)}</strong>
+                    </div>
+                    <div class="analysis-bar">
+                        <div class="analysis-fill" style="width: ${percentage}%; background: ${color};"></div>
+                    </div>
+                    <p>${percentage.toFixed(1)}% do total</p>
+                </div>
+            `;
+        }).join('');
+    
+    document.getElementById('category-analysis').innerHTML = categoryAnalysisHTML || '<p style="text-align: center; color: #666; padding: 32px;">Nenhuma despesa neste período.</p>';
+    
+    // Transações recentes
+    const recentTransactions = filteredTransactions.slice(0, 10);
+    document.getElementById('report-transactions').innerHTML = recentTransactions.length > 0 ? 
+        recentTransactions.map(t => `
+            <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px; border-bottom: 1px solid #f0f0f0;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <span style="font-size: 24px;">${t.icon || '💰'}</span>
+                    <div>
+                        <strong>${t.description}</strong>
+                        <div style="font-size: 12px; color: #666;">${new Date(t.date).toLocaleDateString('pt-BR')}</div>
+                    </div>
+                </div>
+                <strong style="color: ${t.type === 'income' ? '#00b894' : '#e74c3c'};">
+                    ${t.type === 'income' ? '+' : '-'} R$ ${Math.abs(t.amount).toFixed(2)}
+                </strong>
+            </div>
+        `).join('') : '<p style="text-align: center; color: #666; padding: 32px;">Nenhuma transação neste período.</p>';
+    
+    // Estatísticas
+    const avgExpense = filteredTransactions.filter(t => t.type === 'expense').length > 0 
+        ? expenses / filteredTransactions.filter(t => t.type === 'expense').length 
+        : 0;
+    
+    const maxExpense = filteredTransactions
+        .filter(t => t.type === 'expense')
+        .reduce((max, t) => Math.max(max, Math.abs(t.amount)), 0);
+    
+    document.getElementById('report-stats').innerHTML = `
+        <div style="background: white; padding: 20px; border-radius: 12px; border-left: 4px solid #3498db;">
+            <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Total de Transações</div>
+            <div style="font-size: 24px; font-weight: 700; color: #2c3e50;">${filteredTransactions.length}</div>
+        </div>
+        <div style="background: white; padding: 20px; border-radius: 12px; border-left: 4px solid #f39c12;">
+            <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Gasto Médio</div>
+            <div style="font-size: 24px; font-weight: 700; color: #2c3e50;">R$ ${avgExpense.toFixed(2)}</div>
+        </div>
+        <div style="background: white; padding: 20px; border-radius: 12px; border-left: 4px solid #e74c3c;">
+            <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Maior Despesa</div>
+            <div style="font-size: 24px; font-weight: 700; color: #2c3e50;">R$ ${maxExpense.toFixed(2)}</div>
+        </div>
+        <div style="background: white; padding: 20px; border-radius: 12px; border-left: 4px solid #00b894;">
+            <div style="font-size: 14px; color: #666; margin-bottom: 8px;">Taxa de Economia</div>
+            <div style="font-size: 24px; font-weight: 700; color: #2c3e50;">${income > 0 ? ((balance / income) * 100).toFixed(1) : 0}%</div>
+        </div>
+    `;
+}
+
+function exportReportPDF() {
+    const period = document.getElementById('report-period').value;
+    const periodNames = {
+        'month': 'Este Mês',
+        '3months': 'Últimos 3 Meses',
+        '6months': 'Últimos 6 Meses',
+        'year': 'Este Ano',
+        'all': 'Todo Período'
+    };
+    
+    showToast('🔄 Gerando PDF do relatório...', '#3498db');
+    
+    // Simular geração de PDF
+    setTimeout(() => {
+        const reportContent = document.getElementById('report-content');
+        
+        // Criar conteúdo do PDF em uma nova janela
+        const printWindow = window.open('', '_blank');
+        printWindow.document.write(`
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>Relatório Financeiro - MoneyFlow</title>
+                <style>
+                    * { margin: 0; padding: 0; box-sizing: border-box; }
+                    body {
+                        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                        padding: 40px;
+                        color: #2c3e50;
+                        background: white;
+                    }
+                    .header {
+                        text-align: center;
+                        margin-bottom: 40px;
+                        padding-bottom: 20px;
+                        border-bottom: 3px solid #1976d2;
+                    }
+                    .header h1 {
+                        color: #1976d2;
+                        font-size: 32px;
+                        margin-bottom: 10px;
+                    }
+                    .header p {
+                        color: #666;
+                        font-size: 16px;
+                    }
+                    .section {
+                        margin-bottom: 30px;
+                        page-break-inside: avoid;
+                    }
+                    .section h2 {
+                        color: #1976d2;
+                        font-size: 20px;
+                        margin-bottom: 15px;
+                        padding-bottom: 10px;
+                        border-bottom: 2px solid #e0e0e0;
+                    }
+                    .report-summary {
+                        display: grid;
+                        grid-template-columns: repeat(3, 1fr);
+                        gap: 20px;
+                        margin-bottom: 20px;
+                    }
+                    .report-card {
+                        background: #f8f9fa;
+                        padding: 20px;
+                        border-radius: 8px;
+                        border-left: 4px solid #1976d2;
+                    }
+                    .report-card p {
+                        color: #666;
+                        font-size: 14px;
+                        margin-bottom: 8px;
+                    }
+                    .report-card h3 {
+                        font-size: 24px;
+                        color: #2c3e50;
+                    }
+                    table {
+                        width: 100%;
+                        border-collapse: collapse;
+                        margin-top: 10px;
+                    }
+                    th, td {
+                        padding: 12px;
+                        text-align: left;
+                        border-bottom: 1px solid #e0e0e0;
+                    }
+                    th {
+                        background: #f8f9fa;
+                        font-weight: 600;
+                        color: #1976d2;
+                    }
+                    .footer {
+                        margin-top: 50px;
+                        padding-top: 20px;
+                        border-top: 2px solid #e0e0e0;
+                        text-align: center;
+                        color: #666;
+                        font-size: 12px;
+                    }
+                    @media print {
+                        body { padding: 20px; }
+                        .no-print { display: none; }
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h1>💰 MoneyFlow - Relatório Financeiro</h1>
+                    <p>Período: ${periodNames[period]} | Gerado em ${new Date().toLocaleDateString('pt-BR')} às ${new Date().toLocaleTimeString('pt-BR')}</p>
+                    <p>Usuário: ${currentUser.fullName}</p>
+                </div>
+                
+                ${reportContent.innerHTML}
+                
+                <div class="footer">
+                    <p>MoneyFlow © 2025 - Gestão Financeira Inteligente</p>
+                    <p>Este relatório foi gerado automaticamente pelo sistema</p>
+                </div>
+                
+                <div class="no-print" style="margin-top: 30px; text-align: center;">
+                    <button onclick="window.print()" style="background: #1976d2; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; cursor: pointer; margin-right: 10px;">
+                        🖨️ Imprimir / Salvar como PDF
+                    </button>
+                    <button onclick="window.close()" style="background: #e74c3c; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-size: 16px; cursor: pointer;">
+                        ✕ Fechar
+                    </button>
+                </div>
+            </body>
+            </html>
+        `);
+        printWindow.document.close();
+        
+        showToast('✅ Relatório gerado! Use Ctrl+P para salvar como PDF', '#00b894');
+        
+        if (typeof updateGamificationPoints === 'function') {
+            updateGamificationPoints(10);
+        }
+        
+        if (window.MoneyFlowTracker) {
+            window.MoneyFlowTracker.track('report_generated', {
+                period: period,
+                format: 'pdf'
+            });
+        }
+    }, 1500);
 }
 
 // Mark all notifications as read

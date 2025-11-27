@@ -2362,100 +2362,45 @@
             </div>
             <div class="content">
                 <div class="report-filters">
-                    <select class="filter-select">
-                        <option>Este mês</option>
-                        <option>Últimos 3 meses</option>
-                        <option>Últimos 6 meses</option>
-                        <option>Este ano</option>
+                    <select class="filter-select" id="report-period" onchange="generateReport()">
+                        <option value="month">Este mês</option>
+                        <option value="3months">Últimos 3 meses</option>
+                        <option value="6months">Últimos 6 meses</option>
+                        <option value="year">Este ano</option>
+                        <option value="all">Todo período</option>
                     </select>
-                    <button class="btn-primary">
+                    <button class="btn-primary" onclick="exportReportPDF()">
                         <span class="material-icons">download</span>
                         Exportar PDF
                     </button>
                 </div>
 
-                <div class="section">
-                    <h3 class="section-title">Resumo Financeiro</h3>
-                    <div class="report-summary">
-                        <div class="report-card">
-                            <span class="material-icons" style="color: #00b894;">trending_up</span>
-                            <div>
-                                <p>Total de Receitas</p>
-                                <h3>R$ 5.300,00</h3>
-                                <span class="trend positive">+12% vs mês anterior</span>
-                            </div>
-                        </div>
-                        <div class="report-card">
-                            <span class="material-icons" style="color: #d63031;">trending_down</span>
-                            <div>
-                                <p>Total de Despesas</p>
-                                <h3>R$ 2.049,20</h3>
-                                <span class="trend negative">+8% vs mês anterior</span>
-                            </div>
-                        </div>
-                        <div class="report-card">
-                            <span class="material-icons" style="color: #6c5ce7;">account_balance</span>
-                            <div>
-                                <p>Saldo Final</p>
-                                <h3>R$ 3.250,80</h3>
-                                <span class="trend positive">+15% vs mês anterior</span>
-                            </div>
+                <div id="report-content">
+                    <div class="section">
+                        <h3 class="section-title">Resumo Financeiro</h3>
+                        <div class="report-summary" id="report-summary">
+                            <!-- Gerado dinamicamente -->
                         </div>
                     </div>
-                </div>
 
-                <div class="section">
-                    <h3 class="section-title">Análise por Categoria</h3>
-                    <div class="category-analysis">
-                        <div class="analysis-item">
-                            <div class="analysis-header">
-                                <span>🛒 Alimentação</span>
-                                <strong>R$ 850,00</strong>
-                            </div>
-                            <div class="analysis-bar">
-                                <div class="analysis-fill" style="width: 41%; background: #e74c3c;"></div>
-                            </div>
-                            <p>41% do total</p>
-                        </div>
-                        <div class="analysis-item">
-                            <div class="analysis-header">
-                                <span>🚗 Transporte</span>
-                                <strong>R$ 420,00</strong>
-                            </div>
-                            <div class="analysis-bar">
-                                <div class="analysis-fill" style="width: 20%; background: #3498db;"></div>
-                            </div>
-                            <p>20% do total</p>
-                        </div>
-                        <div class="analysis-item">
-                            <div class="analysis-header">
-                                <span>🎬 Lazer</span>
-                                <strong>R$ 300,00</strong>
-                            </div>
-                            <div class="analysis-bar">
-                                <div class="analysis-fill" style="width: 15%; background: #f39c12;"></div>
-                            </div>
-                            <p>15% do total</p>
+                    <div class="section">
+                        <h3 class="section-title">Análise por Categoria</h3>
+                        <div class="category-analysis" id="category-analysis">
+                            <!-- Gerado dinamicamente -->
                         </div>
                     </div>
-                </div>
 
-                <div class="section">
-                    <h3 class="section-title">Metas vs Realizado</h3>
-                    <div class="goals-comparison">
-                        <div class="goal-item">
-                            <h4>Meta de Economia</h4>
-                            <div class="goal-bars">
-                                <div class="goal-bar meta">
-                                    <span>Meta: R$ 1.500</span>
-                                    <div class="bar" style="width: 100%; background: #b2bec3;"></div>
-                                </div>
-                                <div class="goal-bar real">
-                                    <span>Real: R$ 1.200</span>
-                                    <div class="bar" style="width: 80%; background: #00b894;"></div>
-                                </div>
-                            </div>
-                            <p class="goal-status">80% da meta alcançada</p>
+                    <div class="section">
+                        <h3 class="section-title">Transações Recentes</h3>
+                        <div id="report-transactions" style="background: white; border-radius: 12px; padding: 16px;">
+                            <!-- Gerado dinamicamente -->
+                        </div>
+                    </div>
+
+                    <div class="section">
+                        <h3 class="section-title">Estatísticas</h3>
+                        <div id="report-stats" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
+                            <!-- Gerado dinamicamente -->
                         </div>
                     </div>
                 </div>
