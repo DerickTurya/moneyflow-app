@@ -1,3 +1,44 @@
+// Flag para controlar se é logout manual
+let isLoggingOut = false;
+
+// Função de logout GLOBAL
+window.doLogout = function() {
+    console.log('🚪 Iniciando logout...');
+    
+    // Marcar que é logout manual
+    isLoggingOut = true;
+    
+    // Limpar dados
+    localStorage.clear();
+    
+    // Resetar transações
+    transactions = [];
+    
+    // Resetar usuário
+    currentUser = {
+        name: 'João',
+        fullName: 'João Silva',
+        email: 'joao@exemplo.com'
+    };
+    
+    // Limpar campos de login
+    const emailInput = document.getElementById('email-input');
+    const passInput = document.getElementById('password-input');
+    if (emailInput) emailInput.value = '';
+    if (passInput) passInput.value = '';
+    
+    // Voltar ao login
+    window.showScreen('login-screen');
+    
+    setTimeout(() => {
+        isLoggingOut = false;
+        console.log('✅ Logout concluído');
+    }, 500);
+};
+
+// Alias para compatibilidade
+window.performLogout = window.doLogout;
+
 // Data
 let currentUser = {
     name: 'João',
@@ -486,6 +527,12 @@ async function login() {
     const email = document.getElementById('email-input')?.value;
     const password = document.getElementById('password-input')?.value;
     
+    // Se é logout manual, não fazer login automático
+    if (isLoggingOut) {
+        console.log('⚠️ Logout em andamento, aguarde...');
+        return;
+    }
+    
     // Se campos vazios, entrar no modo demo
     if (!email || !password) {
         console.log('🎬 Entrando no modo demo');
@@ -787,7 +834,9 @@ async function register() {
 }
 
 // Logout
-function logout() {
+window.logout = function() {
+    console.log('🚪 Logout iniciado...');
+    
     // Track logout antes de limpar
     if (window.MoneyFlowTracker) {
         window.MoneyFlowTracker.track('logout', {
@@ -811,10 +860,10 @@ function logout() {
     transactions = [];
     
     // Voltar para tela de login
-    showScreen('login-screen');
+    window.showScreen('login-screen');
     
     console.log('✅ Logout realizado');
-}
+};
 
 // Atualizar interface com dados do usuário
 function updateUserInterface() {
