@@ -445,6 +445,18 @@ window.showScreen = function(screenId) {
         } else if (screenId === 'profile-screen') {
             console.log('✅ Atualizando interface do perfil');
             updateUserInterface();
+        } else if (screenId === 'pix-screen') {
+            // Garantir que o input de valor PIX funcione
+            setTimeout(() => {
+                const pixAmountInput = document.getElementById('pix-amount');
+                if (pixAmountInput) {
+                    pixAmountInput.removeAttribute('disabled');
+                    pixAmountInput.removeAttribute('readonly');
+                    pixAmountInput.style.pointerEvents = 'auto';
+                    pixAmountInput.style.userSelect = 'auto';
+                    console.log('✅ Input PIX habilitado');
+                }
+            }, 100);
         }
     } else {
         console.error('❌ Screen não encontrado:', screenId);
