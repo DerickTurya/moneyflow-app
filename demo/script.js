@@ -1173,54 +1173,275 @@ function closeModal() {
 }
 
 // Realizar Transferência PIX
-function realizarTransferenciaPix() {
-    const amountInput = document.getElementById('pix-amount');
-    const keyInput = document.getElementById('pix-key');
+// 🤖 Auto Categorização PIX com IA
+let pixAutoCategory = null;
+
+function autoCategorizePix() {
+    const name = document.getElementById('pix-recipient-name')?.value || '';
+    const description = document.getElementById('pix-description')?.value || '';
+    const amount = parseFloat(document.getElementById('pix-amount')?.value) || 0;
     
-    const amountValue = amountInput.value.replace('R$', '').replace(/\./g, '').replace(',', '.').trim();
-    const amount = parseFloat(amountValue);
+    if (!name && !description && !amount) {
+        document.getElementById('pix-auto-category').style.display = 'none';
+        return;
+    }
+    
+    // Combinar nome + descrição para análise
+    const text = `${name} ${description}`.toLowerCase();
+    
+    // IA de Categorização
+    let category = 'other';
+    let categoryName = 'Outros';
+    let icon = '📝';
+    let confidence = 0;
+    
+    // Alimentação (90-98%)
+    if (/(restaurante|comida|lanche|pizza|burger|almoço|jantar|café|padaria|ifood|uber eats|delivery|bar|churrasco|açai)/i.test(text)) {
+        category = 'food';
+        categoryName = 'Alimentação';
+        icon = '🍔';
+        confidence = Math.floor(Math.random() * 8) + 90;
+    }
+    // Transporte (88-96%)
+    else if (/(uber|99|taxi|combustível|gasolina|posto|estacionamento|pedágio|ônibus|metrô|transporte)/i.test(text)) {
+        category = 'transport';
+        categoryName = 'Transporte';
+        icon = '🚗';
+        confidence = Math.floor(Math.random() * 8) + 88;
+    }
+    // Moradia (92-98%)
+    else if (/(aluguel|condomínio|água|luz|internet|gás|iptu|imobiliária|proprietário)/i.test(text)) {
+        category = 'housing';
+        categoryName = 'Moradia';
+        icon = '🏠';
+        confidence = Math.floor(Math.random() * 6) + 92;
+    }
+    // Saúde (90-97%)
+    else if (/(farmácia|médico|consulta|hospital|remédio|exame|dentista|fisioterapia|academia)/i.test(text)) {
+        category = 'health';
+        categoryName = 'Saúde';
+        icon = '💊';
+        confidence = Math.floor(Math.random() * 7) + 90;
+    }
+    // Lazer (85-94%)
+    else if (/(cinema|teatro|show|festa|ingresso|netflix|spotify|streaming|jogo|diversão|viagem)/i.test(text)) {
+        category = 'leisure';
+        categoryName = 'Lazer';
+        icon = '🎬';
+        confidence = Math.floor(Math.random() * 9) + 85;
+    }
+    // Compras (82-92%)
+    else if (/(loja|compra|shopping|roupa|presente|mercado|supermercado|magazine|online)/i.test(text)) {
+        category = 'shopping';
+        categoryName = 'Compras';
+        icon = '🛍️';
+        confidence = Math.floor(Math.random() * 10) + 82;
+    }
+    // Educação (90-97%)
+    else if (/(escola|faculdade|curso|livro|material escolar|mensalidade|matrícula)/i.test(text)) {
+        category = 'education';
+        categoryName = 'Educação';
+        icon = '📚';
+        confidence = Math.floor(Math.random() * 7) + 90;
+    }
+    // Pelo valor (heurística adicional)
+    else if (amount > 500) {
+        category = 'housing';
+        categoryName = 'Moradia';
+        icon = '🏠';
+        confidence = 75;
+    }
+    else {
+        category = 'other';
+        categoryName = 'Outros';
+        icon = '📝';
+        confidence = 70;
+    }
+    
+    // Salvar categoria sugerida
+    pixAutoCategory = { category, categoryName, icon, confidence };
+    
+    // Mostrar card de categoria
+    document.getElementById('pix-auto-category').style.display = 'block';
+    document.getElementById('pix-category-icon').textContent = icon;
+    document.getElementById('pix-category-name').textContent = categoryName;
+    document.getElementById('pix-confidence').textContent = `${confidence}%`;
+    
+    // Adicionar animação
+    const card = document.getElementById('pix-auto-category');
+    card.style.animation = 'slideInRight 0.3s ease';
+}
+
+function selectPixRecipient(name, key, categoryHint) {
+    document.getElementById('pix-recipient-name').value = name;
+    document.getElementById('pix-key').value = key;
+    
+    // Scroll suave para o formulário
+    document.querySelector('.pix-form').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    
+    // Trigger auto categorização
+    setTimeout(() => autoCategorizePix(), 300);
+}
+
+function updatePixKeyPlaceholder() {
+    const keyType = document.getElementById('pix-key-type').value;
+    const input = document.getElementById('pix-key');
+    
+    const placeholders = {
+        'cpf': '000.000.000-00',
+        'email': 'seu@email.com',
+        'phone': '(00) 00000-0000',
+        'random': '00000000-0000-0000-0000-000000000000'
+    };
+    
+    input.placeholder = placeholders[keyType] || 'Digite a chave PIX';
+}
+
+function showCategorySelector() {
+    const modal = document.createElement('div');
+    modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px;';
+    
+    modal.innerHTML = `
+        <div style="background: var(--white); border-radius: 20px; padding: 24px; max-width: 400px; width: 100%; max-height: 80vh; overflow-y: auto;">
+            <h3 style="margin: 0 0 20px 0;">Selecione a Categoria</h3>
+            <div style="display: grid; grid-template-columns: 1fr; gap: 12px;">
+                ${Object.entries(categoryData).map(([key, cat]) => `
+                    <div class="category-option" onclick="selectPixCategory('${key}', '${cat.name}', '${cat.icon}')" style="padding: 16px; border: 2px solid var(--light); border-radius: 12px; cursor: pointer; display: flex; align-items: center; gap: 12px; transition: all 0.2s;">
+                        <span style="font-size: 32px;">${cat.icon}</span>
+                        <span style="font-weight: 600; font-size: 16px;">${cat.name}</span>
+                    </div>
+                `).join('')}
+            </div>
+            <button onclick="this.parentElement.parentElement.remove()" style="width: 100%; margin-top: 20px; padding: 14px; background: var(--gray); color: white; border: none; border-radius: 12px; font-weight: 600; cursor: pointer;">Cancelar</button>
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+    
+    // Hover effect
+    setTimeout(() => {
+        document.querySelectorAll('.category-option').forEach(opt => {
+            opt.addEventListener('mouseenter', function() {
+                this.style.borderColor = 'var(--primary)';
+                this.style.background = 'var(--background)';
+            });
+            opt.addEventListener('mouseleave', function() {
+                this.style.borderColor = 'var(--light)';
+                this.style.background = 'transparent';
+            });
+        });
+    }, 100);
+}
+
+function selectPixCategory(category, name, icon) {
+    pixAutoCategory = { category, categoryName: name, icon, confidence: 100 };
+    
+    document.getElementById('pix-category-icon').textContent = icon;
+    document.getElementById('pix-category-name').textContent = name;
+    document.getElementById('pix-confidence').textContent = '100%';
+    
+    // Fechar modal
+    document.querySelectorAll('body > div').forEach(el => {
+        if (el.style.position === 'fixed' && el.style.zIndex === '10000') {
+            el.remove();
+        }
+    });
+    
+    showToast(`Categoria alterada para ${name}`, '#00b894');
+}
+
+function showPixHistory() {
+    const pixTransactions = transactions.filter(t => t.paymentMethod === 'pix');
+    
+    const modal = document.createElement('div');
+    modal.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.7); z-index: 10000; display: flex; align-items: center; justify-content: center; padding: 20px;';
+    
+    modal.innerHTML = `
+        <div style="background: var(--white); border-radius: 20px; padding: 24px; max-width: 500px; width: 100%; max-height: 80vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                <h3 style="margin: 0;">Histórico PIX</h3>
+                <button onclick="this.parentElement.parentElement.parentElement.remove()" style="background: none; border: none; font-size: 24px; cursor: pointer;">×</button>
+            </div>
+            ${pixTransactions.length > 0 ? pixTransactions.map(t => `
+                <div style="padding: 16px; border-bottom: 1px solid var(--light); display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong>${t.description}</strong>
+                        <p style="margin: 4px 0 0 0; color: var(--gray); font-size: 14px;">${new Date(t.date).toLocaleDateString('pt-BR')}</p>
+                    </div>
+                    <span style="font-weight: 700; color: ${t.amount < 0 ? '#e74c3c' : '#00b894'};">R$ ${Math.abs(t.amount).toFixed(2)}</span>
+                </div>
+            `).join('') : '<p style="text-align: center; color: var(--gray);">Nenhuma transação PIX ainda</p>'}
+        </div>
+    `;
+    
+    document.body.appendChild(modal);
+}
+
+function showAddPixKeyModal() {
+    showToast('Funcionalidade em desenvolvimento', '#f39c12');
+}
+
+function realizarTransferenciaPix() {
+    const recipientName = document.getElementById('pix-recipient-name')?.value.trim() || '';
+    const keyInput = document.getElementById('pix-key');
+    const amountInput = document.getElementById('pix-amount');
+    const descriptionInput = document.getElementById('pix-description');
+    
+    const amount = parseFloat(amountInput.value) || 0;
     const key = keyInput.value.trim();
+    const description = descriptionInput.value.trim();
     
     // Validações
+    if (!recipientName) {
+        showToast('Por favor, insira o nome do destinatário!', '#e74c3c');
+        return;
+    }
+    
     if (!amount || amount <= 0) {
-        alert('Por favor, insira um valor válido!');
+        showToast('Por favor, insira um valor válido!', '#e74c3c');
         return;
     }
     
     if (!key) {
-        alert('Por favor, insira uma chave PIX!');
+        showToast('Por favor, insira uma chave PIX!', '#e74c3c');
         return;
     }
     
     // Verifica saldo
     const balance = transactions.reduce((sum, t) => sum + t.amount, 0);
     if (amount > balance) {
-        alert('Saldo insuficiente!');
+        showToast('Saldo insuficiente!', '#e74c3c');
         return;
     }
     
-    // Detecta tipo de chave
-    let keyType = 'random';
-    if (key.includes('@')) {
-        keyType = 'email';
-    } else if (key.replace(/\D/g, '').length === 11 && !key.includes('(')) {
-        keyType = 'cpf';
-    } else if (key.includes('(') || key.replace(/\D/g, '').length > 10) {
-        keyType = 'phone';
+    // Verifica limite diário (demo)
+    if (amount > 1000) {
+        showToast('Valor acima do limite diário de R$ 1.000,00', '#e74c3c');
+        return;
     }
+    
+    // Usar categoria da IA ou padrão
+    const category = pixAutoCategory?.category || 'other';
+    const categoryName = pixAutoCategory?.categoryName || 'Outros';
+    const icon = pixAutoCategory?.icon || '📝';
+    const aiCategorized = pixAutoCategory !== null;
+    const confidence = pixAutoCategory?.confidence || 0;
     
     // Cria transação
     const newTransaction = {
         id: transactions.length + 1,
-        description: `PIX para ${key}`,
+        description: description || `PIX para ${recipientName}`,
         amount: -Math.abs(amount),
         type: 'expense',
-        category: 'transfer',
-        categoryName: 'Transferência',
+        category: category,
+        categoryName: categoryName,
         date: new Date().toISOString().split('T')[0],
-        icon: '💸',
-        aiCategorized: false,
-        paymentMethod: 'pix'
+        icon: icon,
+        aiCategorized: aiCategorized,
+        confidence: confidence,
+        paymentMethod: 'pix',
+        pixRecipient: recipientName,
+        pixKey: key
     };
     
     transactions.unshift(newTransaction);
