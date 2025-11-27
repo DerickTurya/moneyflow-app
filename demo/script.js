@@ -449,6 +449,8 @@ window.showScreen = function(screenId) {
             renderBudgets();
         } else if (screenId === 'insurance-screen') {
             renderMyInsurances();
+        } else if (screenId === 'loans-screen') {
+            renderMyLoans();
         }
     } else {
         console.error('❌ Screen não encontrado:', screenId);
@@ -4036,6 +4038,257 @@ function calculateLoan() {
             <strong>R$ ${totalPayment.toFixed(2)}</strong>
         </div>
     `;
+}
+
+// Loan Management
+let myLoans = JSON.parse(localStorage.getItem('moneyflow_loans')) || [];
+let currentLoanRequest = null;
+
+function requestLoan(type, rate, maxAmount) {
+    currentLoanRequest = { type, rate, maxAmount };
+    const modal = document.getElementById('loan-request-modal');
+    const title = document.getElementById('loan-modal-title');
+    
+    const loanTypes = {
+        'personal': 'Empréstimo Pessoal',
+        'consigned': 'Crédito Consignado',
+        'fgts': 'Antecipação FGTS'
+    };
+    
+    title.textContent = `Solicitar ${loanTypes[type]}`;
+    document.getElementById('loan-request-amount').max = maxAmount;
+    document.getElementById('loan-request-amount').placeholder = `Até R$ ${maxAmount.toLocaleString('pt-BR')}`;
+    document.getElementById('loan-summary-preview').style.display = 'none';
+    
+    modal.classList.add('active');
+}
+
+function closeLoanModal() {
+    document.getElementById('loan-request-modal').classList.remove('active');
+    currentLoanRequest = null;
+    document.getElementById('loan-request-amount').value = '';
+    document.getElementById('loan-request-installments').value = '12';
+    document.getElementById('loan-purpose').value = '';
+    document.getElementById('loan-summary-preview').style.display = 'none';
+}
+
+function previewLoanRequest() {
+    const amount = parseFloat(document.getElementById('loan-request-amount').value);
+    const installments = parseInt(document.getElementById('loan-request-installments').value);
+    const purpose = document.getElementById('loan-purpose').value;
+    
+    if (!amount || amount <= 0) {
+        showToast('Por favor, insira um valor válido.', '#e74c3c');
+        return;
+    }
+    
+    if (amount > currentLoanRequest.maxAmount) {
+        showToast(`Valor máximo para este tipo de empréstimo: R$ ${currentLoanRequest.maxAmount.toLocaleString('pt-BR')}`, '#e74c3c');
+        return;
+    }
+    
+    if (!purpose) {
+        showToast('Por favor, selecione a finalidade.', '#e74c3c');
+        return;
+    }
+    
+    const rate = currentLoanRequest.rate / 100;
+    const monthlyPayment = (amount * rate * Math.pow(1 + rate, installments)) / (Math.pow(1 + rate, installments) - 1);
+    const totalPayment = monthlyPayment * installments;
+    
+    document.getElementById('loan-preview-rate').textContent = `${currentLoanRequest.rate}% a.m.`;
+    document.getElementById('loan-preview-installment').textContent = `R$ ${monthlyPayment.toFixed(2)}`;
+    document.getElementById('loan-preview-total').textContent = `R$ ${totalPayment.toFixed(2)}`;
+    document.getElementById('loan-summary-preview').style.display = 'block';
+    
+    currentLoanRequest.calculatedAmount = amount;
+    currentLoanRequest.calculatedInstallments = installments;
+    currentLoanRequest.monthlyPayment = monthlyPayment;
+    currentLoanRequest.totalPayment = totalPayment;
+    currentLoanRequest.purpose = purpose;
+}
+
+function confirmLoanRequest() {
+    if (!currentLoanRequest.calculatedAmount) {
+        showToast('Por favor, visualize a simulação primeiro.', '#e74c3c');
+        return;
+    }
+    
+    const loanTypes = {
+        'personal': 'Empréstimo Pessoal',
+        'consigned': 'Crédito Consignado',
+        'fgts': 'Antecipação FGTS'
+    };
+    
+    const purposeNames = {
+        'personal': 'Uso pessoal',
+        'business': 'Negócio',
+        'debt': 'Pagar dívidas',
+        'health': 'Saúde',
+        'education': 'Educação',
+        'home': 'Reforma/Casa',
+        'other': 'Outros'
+    };
+    
+    const newLoan = {
+        id: myLoans.length + 1,
+        type: currentLoanRequest.type,
+        name: loanTypes[currentLoanRequest.type],
+        amount: currentLoanRequest.calculatedAmount,
+        installments: currentLoanRequest.calculatedInstallments,
+        monthlyPayment: currentLoanRequest.monthlyPayment,
+        totalPayment: currentLoanRequest.totalPayment,
+        rate: currentLoanRequest.rate,
+        purpose: purposeNames[currentLoanRequest.purpose],
+        requestDate: new Date().toISOString().split('T')[0],
+        status: 'approved',
+        paidInstallments: 0
+    };
+    
+    myLoans.push(newLoan);
+    localStorage.setItem('moneyflow_loans', JSON.stringify(myLoans));
+    
+    // Adicionar valor do empréstimo ao saldo (transação de entrada)
+    const transaction = {
+        id: transactions.length + 1,
+        description: `${newLoan.name} aprovado`,
+        amount: newLoan.amount,
+        type: 'income',
+        category: 'other',
+        categoryName: 'Outros',
+        date: new Date().toISOString().split('T')[0],
+        icon: '💰'
+    };
+    transactions.unshift(transaction);
+    localStorage.setItem('moneyflow_transactions', JSON.stringify(transactions));
+    
+    showToast(`✅ ${newLoan.name} de R$ ${newLoan.amount.toFixed(2)} aprovado!`, '#00b894');
+    
+    if (typeof updateGamificationPoints === 'function') {
+        updateGamificationPoints(20);
+    }
+    
+    if (window.MoneyFlowTracker) {
+        window.MoneyFlowTracker.track('loan_approved', {
+            type: newLoan.type,
+            amount: newLoan.amount,
+            installments: newLoan.installments,
+            rate: newLoan.rate,
+            purpose: newLoan.purpose
+        });
+    }
+    
+    updateBalanceDisplay();
+    renderRecentTransactions();
+    closeLoanModal();
+    renderMyLoans();
+}
+
+function renderMyLoans() {
+    const list = document.getElementById('my-loans-list');
+    if (!list) return;
+    
+    if (myLoans.length === 0) {
+        list.innerHTML = '<p style="text-align: center; color: #666; padding: 32px;">Nenhum empréstimo ativo.</p>';
+        return;
+    }
+    
+    list.innerHTML = myLoans.map(loan => {
+        const progress = (loan.paidInstallments / loan.installments) * 100;
+        const remaining = loan.installments - loan.paidInstallments;
+        const remainingAmount = remaining * loan.monthlyPayment;
+        
+        return `
+            <div style="background: white; border: 2px solid #1976d2; border-radius: 16px; padding: 20px; margin-bottom: 16px;">
+                <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 16px;">
+                    <div>
+                        <h4 style="margin: 0 0 4px 0;">💰 ${loan.name}</h4>
+                        <span style="display: inline-block; background: #00b894; color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 600;">Aprovado</span>
+                    </div>
+                    <button onclick="payLoanInstallment(${loan.id})" style="background: #1976d2; color: white; border: none; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                        Pagar Parcela
+                    </button>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+                    <div>
+                        <span style="color: #666; font-size: 14px;">Valor total:</span>
+                        <div style="font-size: 18px; font-weight: 700; color: #1976d2;">R$ ${loan.amount.toFixed(2)}</div>
+                    </div>
+                    <div>
+                        <span style="color: #666; font-size: 14px;">Parcela mensal:</span>
+                        <div style="font-size: 18px; font-weight: 700;">R$ ${loan.monthlyPayment.toFixed(2)}</div>
+                    </div>
+                </div>
+                <div style="margin-bottom: 12px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="font-size: 14px; color: #666;">Progresso: ${loan.paidInstallments}/${loan.installments} parcelas</span>
+                        <span style="font-size: 14px; font-weight: 600;">${progress.toFixed(0)}%</span>
+                    </div>
+                    <div style="width: 100%; height: 8px; background: #e0e0e0; border-radius: 4px; overflow: hidden;">
+                        <div style="width: ${progress}%; height: 100%; background: linear-gradient(90deg, #00b894, #00856f); transition: width 0.3s;"></div>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 14px;">
+                    <span style="color: #666;">Restante a pagar:</span>
+                    <strong style="color: #e74c3c;">R$ ${remainingAmount.toFixed(2)}</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 14px; margin-top: 8px;">
+                    <span style="color: #666;">Taxa de juros:</span>
+                    <span>${loan.rate}% a.m.</span>
+                </div>
+                <div style="display: flex; justify-content: space-between; font-size: 14px; margin-top: 8px;">
+                    <span style="color: #666;">Finalidade:</span>
+                    <span>${loan.purpose}</span>
+                </div>
+            </div>
+        `;
+    }).join('');
+}
+
+function payLoanInstallment(loanId) {
+    const loan = myLoans.find(l => l.id === loanId);
+    if (!loan) return;
+    
+    if (loan.paidInstallments >= loan.installments) {
+        showToast('Este empréstimo já foi totalmente pago!', '#00b894');
+        return;
+    }
+    
+    if (confirm(`Pagar parcela de R$ ${loan.monthlyPayment.toFixed(2)}?`)) {
+        loan.paidInstallments++;
+        
+        // Se pagou tudo, remover da lista
+        if (loan.paidInstallments >= loan.installments) {
+            myLoans = myLoans.filter(l => l.id !== loanId);
+            showToast(`🎉 Empréstimo quitado! Parabéns!`, '#00b894');
+        } else {
+            showToast(`✅ Parcela ${loan.paidInstallments}/${loan.installments} paga!`, '#00b894');
+        }
+        
+        localStorage.setItem('moneyflow_loans', JSON.stringify(myLoans));
+        
+        // Adicionar transação de pagamento
+        const transaction = {
+            id: transactions.length + 1,
+            description: `Parcela ${loan.name} (${loan.paidInstallments}/${loan.installments})`,
+            amount: -loan.monthlyPayment,
+            type: 'expense',
+            category: 'other',
+            categoryName: 'Outros',
+            date: new Date().toISOString().split('T')[0],
+            icon: '💳'
+        };
+        transactions.unshift(transaction);
+        localStorage.setItem('moneyflow_transactions', JSON.stringify(transactions));
+        
+        if (typeof updateGamificationPoints === 'function') {
+            updateGamificationPoints(5);
+        }
+        
+        updateBalanceDisplay();
+        renderRecentTransactions();
+        renderMyLoans();
+    }
 }
 
 // Mark all notifications as read

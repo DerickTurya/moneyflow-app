@@ -2314,7 +2314,7 @@
                                 <li>✓ Sem consulta ao SPC</li>
                                 <li>✓ Até 36x para pagar</li>
                             </ul>
-                            <button class="btn-primary">Solicitar</button>
+                            <button class="btn-primary" onclick="requestLoan('personal', 2.5, 50000)">Solicitar</button>
                         </div>
                         <div class="loan-card">
                             <h4>Crédito Consignado</h4>
@@ -2325,7 +2325,7 @@
                                 <li>✓ Menor taxa do mercado</li>
                                 <li>✓ Até 84x para pagar</li>
                             </ul>
-                            <button class="btn-secondary">Solicitar</button>
+                            <button class="btn-secondary" onclick="requestLoan('consigned', 1.8, 100000)">Solicitar</button>
                         </div>
                         <div class="loan-card">
                             <h4>Antecipação FGTS</h4>
@@ -2336,8 +2336,16 @@
                                 <li>✓ Sem análise de crédito</li>
                                 <li>✓ Até 12x para pagar</li>
                             </ul>
-                            <button class="btn-secondary">Solicitar</button>
+                            <button class="btn-secondary" onclick="requestLoan('fgts', 1.49, 5000)">Solicitar</button>
                         </div>
+                    </div>
+                </div>
+
+                <!-- My Loans Section -->
+                <div class="section">
+                    <h3 class="section-title">Meus Empréstimos</h3>
+                    <div id="my-loans-list">
+                        <p style="text-align: center; color: #666; padding: 32px;">Nenhum empréstimo ativo.</p>
                     </div>
                 </div>
             </div>
@@ -3036,6 +3044,76 @@
                     <p>🔥 Streak de 7 dias! +50 pontos</p>
                 </div>
                 <button class="btn-primary" onclick="closeModal()">OK</button>
+            </div>
+        </div>
+
+        <!-- Loan Request Modal -->
+        <div id="loan-request-modal" class="modal">
+            <div class="modal-content" style="max-width: 500px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                    <h3 style="margin: 0;" id="loan-modal-title">Solicitar Empréstimo</h3>
+                    <button onclick="closeLoanModal()" style="background: none; border: none; cursor: pointer; padding: 8px;">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+
+                <div class="input-group">
+                    <label>Valor do Empréstimo (R$)</label>
+                    <input type="number" id="loan-request-amount" placeholder="Ex: 5000" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px;">
+                </div>
+
+                <div class="input-group">
+                    <label>Número de Parcelas</label>
+                    <select id="loan-request-installments" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px;">
+                        <option value="6">6x</option>
+                        <option value="12">12x</option>
+                        <option value="18">18x</option>
+                        <option value="24">24x</option>
+                        <option value="36">36x</option>
+                        <option value="48">48x</option>
+                        <option value="60">60x</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Finalidade</label>
+                    <select id="loan-purpose" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px;">
+                        <option value="">Selecione...</option>
+                        <option value="personal">Uso pessoal</option>
+                        <option value="business">Negócio</option>
+                        <option value="debt">Pagar dívidas</option>
+                        <option value="health">Saúde</option>
+                        <option value="education">Educação</option>
+                        <option value="home">Reforma/Casa</option>
+                        <option value="other">Outros</option>
+                    </select>
+                </div>
+
+                <div id="loan-summary-preview" style="display: none; background: #f8f9fa; padding: 20px; border-radius: 12px; margin: 20px 0;">
+                    <h4 style="margin-bottom: 12px;">📊 Resumo</h4>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span>Taxa de juros:</span>
+                        <strong id="loan-preview-rate">2,5% a.m.</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span>Parcela mensal:</span>
+                        <strong id="loan-preview-installment">R$ 0,00</strong>
+                    </div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span>Total a pagar:</span>
+                        <strong id="loan-preview-total">R$ 0,00</strong>
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="previewLoanRequest()" style="width: 100%; margin-bottom: 12px;">
+                    <span class="material-icons">visibility</span>
+                    Visualizar Simulação
+                </button>
+
+                <button class="btn-primary" onclick="confirmLoanRequest()" style="width: 100%; background: #00b894;">
+                    <span class="material-icons">check_circle</span>
+                    Confirmar Solicitação
+                </button>
             </div>
         </div>
 
