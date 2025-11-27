@@ -2049,47 +2049,8 @@
 
                 <div class="section">
                     <h3 class="section-title">Orçamentos por Categoria</h3>
-                    <div class="budget-list">
-                        <div class="budget-item">
-                            <div class="budget-header">
-                                <span>🛒 Alimentação</span>
-                                <span class="budget-amount">R$ 850 / R$ 1.000</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 85%; background: #f39c12;"></div>
-                            </div>
-                            <p class="budget-status warning">⚠️ 85% do orçamento usado</p>
-                        </div>
-                        <div class="budget-item">
-                            <div class="budget-header">
-                                <span>🚗 Transporte</span>
-                                <span class="budget-amount">R$ 420 / R$ 600</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 70%; background: #00b894;"></div>
-                            </div>
-                            <p class="budget-status success">✓ Dentro do orçamento</p>
-                        </div>
-                        <div class="budget-item">
-                            <div class="budget-header">
-                                <span>🏠 Moradia</span>
-                                <span class="budget-amount">R$ 1.200 / R$ 1.200</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 100%; background: #d63031;"></div>
-                            </div>
-                            <p class="budget-status danger">🚨 Orçamento atingido!</p>
-                        </div>
-                        <div class="budget-item">
-                            <div class="budget-header">
-                                <span>🎬 Lazer</span>
-                                <span class="budget-amount">R$ 300 / R$ 400</span>
-                            </div>
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: 75%; background: #00b894;"></div>
-                            </div>
-                            <p class="budget-status success">✓ Dentro do orçamento</p>
-                        </div>
+                    <div class="budget-list" id="budgets-list">
+                        <!-- Orçamentos serão renderizados dinamicamente -->
                     </div>
                 </div>
             </div>
@@ -3063,6 +3024,52 @@
                     <p>🔥 Streak de 7 dias! +50 pontos</p>
                 </div>
                 <button class="btn-primary" onclick="closeModal()">OK</button>
+            </div>
+        </div>
+
+        <!-- Create Budget Modal -->
+        <div id="create-budget-modal" class="modal">
+            <div class="modal-content" style="max-width: 500px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px;">
+                    <h3 style="margin: 0;">Criar Orçamento</h3>
+                    <button onclick="closeBudgetModal()" style="background: none; border: none; cursor: pointer; padding: 8px;">
+                        <span class="material-icons">close</span>
+                    </button>
+                </div>
+
+                <div class="input-group">
+                    <label>Categoria</label>
+                    <select id="budget-category" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px;">
+                        <option value="">Selecione uma categoria</option>
+                        <option value="food">🍔 Alimentação</option>
+                        <option value="transport">🚗 Transporte</option>
+                        <option value="housing">🏠 Moradia</option>
+                        <option value="health">💊 Saúde</option>
+                        <option value="leisure">🎬 Lazer</option>
+                        <option value="shopping">🛍️ Compras</option>
+                        <option value="education">📚 Educação</option>
+                        <option value="other">📝 Outros</option>
+                    </select>
+                </div>
+
+                <div class="input-group">
+                    <label>Valor do Orçamento (R$)</label>
+                    <input type="number" id="budget-amount" placeholder="Ex: 1000" step="0.01" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px;">
+                </div>
+
+                <div class="input-group">
+                    <label>Período</label>
+                    <select id="budget-period" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 8px; font-size: 16px;">
+                        <option value="monthly">Mensal</option>
+                        <option value="weekly">Semanal</option>
+                        <option value="yearly">Anual</option>
+                    </select>
+                </div>
+
+                <button class="btn-primary" onclick="createBudget()" style="width: 100%; margin-top: 16px;">
+                    <span class="material-icons">add</span>
+                    Criar Orçamento
+                </button>
             </div>
         </div>
     </div>

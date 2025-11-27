@@ -445,6 +445,8 @@ window.showScreen = function(screenId) {
         } else if (screenId === 'profile-screen') {
             console.log('✅ Atualizando interface do perfil');
             updateUserInterface();
+        } else if (screenId === 'budgets-screen') {
+            renderBudgets();
         }
     } else {
         console.error('❌ Screen não encontrado:', screenId);
@@ -3527,6 +3529,209 @@ function processGamesRecharge() {
     document.querySelectorAll('#games-content .value-card').forEach(card => {
         card.classList.remove('selected');
     });
+}
+
+// Budget Management
+let budgets = JSON.parse(localStorage.getItem('moneyflow_budgets')) || [
+    { id: 1, category: 'food', categoryName: 'Alimentação', icon: '🍔', amount: 1000, period: 'monthly' },
+    { id: 2, category: 'transport', categoryName: 'Transporte', icon: '🚗', amount: 600, period: 'monthly' },
+    { id: 3, category: 'housing', categoryName: 'Moradia', icon: '🏠', amount: 1200, period: 'monthly' },
+    { id: 4, category: 'leisure', categoryName: 'Lazer', icon: '🎬', amount: 400, period: 'monthly' }
+];
+
+function showCreateBudgetModal() {
+    document.getElementById('create-budget-modal').classList.add('active');
+}
+
+function closeBudgetModal() {
+    document.getElementById('create-budget-modal').classList.remove('active');
+    document.getElementById('budget-category').value = '';
+    document.getElementById('budget-amount').value = '';
+    document.getElementById('budget-period').value = 'monthly';
+}
+
+function createBudget() {
+    const categorySelect = document.getElementById('budget-category');
+    const category = categorySelect.value;
+    const amount = parseFloat(document.getElementById('budget-amount').value);
+    const period = document.getElementById('budget-period').value;
+    
+    if (!category) {
+        showToast('Por favor, selecione uma categoria.', '#e74c3c');
+        return;
+    }
+    
+    if (!amount || amount <= 0) {
+        showToast('Por favor, insira um valor válido.', '#e74c3c');
+        return;
+    }
+    
+    // Verificar se já existe orçamento para essa categoria
+    const existingBudget = budgets.find(b => b.category === category);
+    if (existingBudget) {
+        showToast('Já existe um orçamento para esta categoria. Edite o existente.', '#f39c12');
+        return;
+    }
+    
+    const categoryNames = {
+        'food': 'Alimentação',
+        'transport': 'Transporte',
+        'housing': 'Moradia',
+        'health': 'Saúde',
+        'leisure': 'Lazer',
+        'shopping': 'Compras',
+        'education': 'Educação',
+        'other': 'Outros'
+    };
+    
+    const categoryIcons = {
+        'food': '🍔',
+        'transport': '🚗',
+        'housing': '🏠',
+        'health': '💊',
+        'leisure': '🎬',
+        'shopping': '🛍️',
+        'education': '📚',
+        'other': '📝'
+    };
+    
+    const newBudget = {
+        id: budgets.length + 1,
+        category: category,
+        categoryName: categoryNames[category],
+        icon: categoryIcons[category],
+        amount: amount,
+        period: period
+    };
+    
+    budgets.push(newBudget);
+    localStorage.setItem('moneyflow_budgets', JSON.stringify(budgets));
+    
+    showToast(`✅ Orçamento de R$ ${amount.toFixed(2)} criado para ${categoryNames[category]}!`, '#00b894');
+    
+    if (typeof updateGamificationPoints === 'function') {
+        updateGamificationPoints(10);
+    }
+    
+    if (window.MoneyFlowTracker) {
+        window.MoneyFlowTracker.track('budget_created', {
+            category: category,
+            amount: amount,
+            period: period
+        });
+    }
+    
+    closeBudgetModal();
+    renderBudgets();
+}
+
+function renderBudgets() {
+    const budgetsList = document.getElementById('budgets-list');
+    if (!budgetsList) return;
+    
+    if (budgets.length === 0) {
+        budgetsList.innerHTML = '<p style="text-align: center; color: #666; padding: 32px;">Nenhum orçamento criado. Clique no + para adicionar.</p>';
+        return;
+    }
+    
+    // Calcular gastos por categoria
+    const spentByCategory = {};
+    transactions.forEach(t => {
+        if (t.type === 'expense' && t.category) {
+            if (!spentByCategory[t.category]) {
+                spentByCategory[t.category] = 0;
+            }
+            spentByCategory[t.category] += Math.abs(t.amount);
+        }
+    });
+    
+    budgetsList.innerHTML = budgets.map(budget => {
+        const spent = spentByCategory[budget.category] || 0;
+        const percentage = Math.min((spent / budget.amount) * 100, 100);
+        
+        let statusClass = 'success';
+        let statusMessage = '✓ Dentro do orçamento';
+        let barColor = '#00b894';
+        
+        if (percentage >= 100) {
+            statusClass = 'danger';
+            statusMessage = '🚨 Orçamento atingido!';
+            barColor = '#d63031';
+        } else if (percentage >= 80) {
+            statusClass = 'warning';
+            statusMessage = `⚠️ ${percentage.toFixed(0)}% do orçamento usado`;
+            barColor = '#f39c12';
+        }
+        
+        const periodText = {
+            'monthly': 'Mensal',
+            'weekly': 'Semanal',
+            'yearly': 'Anual'
+        };
+        
+        return `
+            <div class="budget-item">
+                <div class="budget-header">
+                    <span>${budget.icon} ${budget.categoryName}</span>
+                    <span class="budget-amount">R$ ${spent.toFixed(2)} / R$ ${budget.amount.toFixed(2)}</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${percentage}%; background: ${barColor};"></div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <p class="budget-status ${statusClass}">${statusMessage}</p>
+                    <button onclick="deleteBudget(${budget.id})" style="background: none; border: none; color: #e74c3c; cursor: pointer; padding: 4px 8px;">
+                        <span class="material-icons" style="font-size: 20px;">delete</span>
+                    </button>
+                </div>
+                <small style="color: #666;">Período: ${periodText[budget.period]}</small>
+            </div>
+        `;
+    }).join('');
+    
+    // Atualizar resumo total
+    updateBudgetSummary();
+}
+
+function updateBudgetSummary() {
+    const totalBudget = budgets.reduce((sum, b) => sum + b.amount, 0);
+    const spentByCategory = {};
+    
+    transactions.forEach(t => {
+        if (t.type === 'expense' && t.category) {
+            if (!spentByCategory[t.category]) {
+                spentByCategory[t.category] = 0;
+            }
+            spentByCategory[t.category] += Math.abs(t.amount);
+        }
+    });
+    
+    const totalSpent = budgets.reduce((sum, b) => {
+        return sum + (spentByCategory[b.category] || 0);
+    }, 0);
+    
+    const percentage = totalBudget > 0 ? (totalSpent / totalBudget) * 100 : 0;
+    
+    const summaryDiv = document.querySelector('.budget-summary');
+    if (summaryDiv) {
+        summaryDiv.innerHTML = `
+            <h3>Orçamento Total</h3>
+            <h1>R$ ${totalBudget.toFixed(2)}</h1>
+            <div class="progress-bar">
+                <div class="progress-fill" style="width: ${Math.min(percentage, 100)}%; background: ${percentage >= 100 ? '#e74c3c' : percentage >= 80 ? '#f39c12' : '#00b894'};"></div>
+            </div>
+            <p>R$ ${totalSpent.toFixed(2)} gastos (${percentage.toFixed(0)}%)</p>
+        `;
+    }
+}
+
+function deleteBudget(budgetId) {
+    if (confirm('Tem certeza que deseja excluir este orçamento?')) {
+        budgets = budgets.filter(b => b.id !== budgetId);
+        localStorage.setItem('moneyflow_budgets', JSON.stringify(budgets));
+        showToast('Orçamento excluído com sucesso!', '#00b894');
+        renderBudgets();
+    }
 }
 
 // Loan Calculator
